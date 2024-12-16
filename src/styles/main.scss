@@ -60,7 +60,7 @@ body {
   background-color: transparent;
   border: 2px solid $secondary-color;
   border-radius: 2em;
-  padding: 10vw 10vh;
+  padding: 3vw 3vh;
   text-align: center;
   max-width: 100%;
   width: 60vw;
@@ -82,14 +82,6 @@ img {
 
 .background {
   position: relative;
-}
-
-.joke {
-  font-size: 30px;
-  letter-spacing: 1px;
-  line-height: 40px;
-  margin: 50px auto;
-  max-width: 600px;
 }
 
 html,
