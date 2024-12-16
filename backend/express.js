@@ -1,8 +1,9 @@
 const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
-const app = express();
 const cheerio = require("cheerio");
+
+const app = express();
 
 app.use(cors()); // Enable CORS for all routes
 
