@@ -5,8 +5,7 @@ import HornPeak from './assets/HornPeak.jpg'
 const mountainImg = document.getElementById('mountainImg');
 mountainImg.src = HornPeak;
 
-grabVerse();
-
+await grabVerse();
 
 
 console.log("Finished!");
