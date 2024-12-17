@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev/svgjs" width="1920" height="1080" preserveAspectRatio="none" viewBox="0 0 1920 1080">
+    <g mask="url(&quot;#SvgjsMask1214&quot;)" fill="none">
+        <rect width="1920" height="1080" x="0" y="0" fill="rgba(255, 154, 54, 1)"></rect>
+        <path d="M -200,56 C 192,88.6 576,213 960,219 C 1344,225 1728,112.6 2120,86 L2120 1180 L-200 1180 Z" fill="rgba(255, 221, 188, 1)" class="wave-oscillate1"></path>
+        <path d="M -200,325 C 192,365.4 576,523.6 960,527 C 1344,530.4 1728,379 2120,342 L2120 1180 L-200 1180 Z" fill="rgba(255, 204, 155, 1)" class="wave-oscillate2"></path>
+        <path d="M -200,805 C 192,776.4 576,675.8 960,662 C 1344,648.2 1728,721.2 2120,736 L2120 1180 L-200 1180 Z" fill="rgba(255, 171, 90, 1)" class="wave-oscillate3"></path>
+        <path d="M -200,871 C 192,893.6 576,994.6 960,984 C 1344,973.4 1728,851.2 2120,818 L2120 1180 L-200 1180 Z" fill="rgba(255, 187, 123, 1)" class="wave-oscillate4"></path>
+    </g>
+    <defs>
+        <mask id="SvgjsMask1214">
+            <rect width="1920" height="1080" fill="#ffffff"></rect>
+        </mask>
+        <style>
+            @keyframes oscillate1 {
+                0% { transform: translate(0px, 0px); }
+                50% { transform: translate(0px, 24px); }
+                100% { transform: translate(0px, 0px); }
+            }
+
+            @keyframes oscillate2 {
+                0% { transform: translate(0px, 0px); }
+                50% { transform: translate(0px, -35px); }
+                100% { transform: translate(0px, 0px); }
+            }
+
+            .wave-oscillate1 {
+                animation: oscillate1 15s infinite ease-in-out;
+            }
+
+            .wave-oscillate2 {
+                animation: oscillate2 21s infinite ease-in-out;
+            }
+
+            .wave-oscillate3 {
+                animation: oscillate1 23s infinite ease-in-out;
+            }
+
+            .wave-oscillate4 {
+                animation: oscillate2 18s infinite ease-in-out;
+            }
+        </style>
+    </defs>
+</svg>
