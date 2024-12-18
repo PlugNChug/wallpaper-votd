@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 720" preserveAspectRatio="xMidYMid" width="1920" height="720" style="background: rgb(255, 184, 209);">
+  <g>
+    <linearGradient y2="0" y1="0" x2="1" x1="0" id="gradient">
+      <stop offset="0" stop-color="#e700ff"></stop>
+      <stop offset="1" stop-color="#ff3f3f"></stop>
+    </linearGradient>
+    <path class="wave wave1" opacity="0.4" fill="url(#gradient)" d="M 0 0 L 0 535.932 Q 320 534.148 640 493.113 T 1280 111.375 T 1920 -32.1854 L 1920 0 Z"></path>
+    <path class="wave wave2" opacity="0.4" fill="url(#gradient)" d="M 0 0 L 0 537.728 Q 320 283.245 640 250.834 T 1280 403.516 T 1920 296.787 L 1920 0 Z"></path>
+    <path class="wave wave3" opacity="0.4" fill="url(#gradient)" d="M 0 0 L 0 466.181 Q 320 489.767 640 452.281 T 1280 108.799 T 1920 119.943 L 1920 0 Z"></path>
+    <path class="wave wave4" opacity="0.4" fill="url(#gradient)" d="M 0 0 L 0 607.542 Q 320 511.98 640 465.234 T 1280 124.729 T 1920 171.185 L 1920 0 Z"></path>
+    <path class="wave wave5" opacity="0.4" fill="url(#gradient)" d="M 0 0 L 0 524.502 Q 320 347.637 640 320.026 T 1280 276.127 T 1920 7.0046 L 1920 0 Z"></path>
+  </g>
+  <style>
+    @keyframes waveAnimation1 {
+      0% {
+        d: path("M 0 0 L 0 535.932 Q 320 534.148 640 493.113 T 1280 111.375 T 1920 -32.1854 L 1920 0 Z");
+      }
+      50% {
+        d: path("M 0 0 L 0 555.932 Q 320 549.148 640 503.113 T 1280 121.375 T 1920 -22.1854 L 1920 0 Z");
+      }
+      100% {
+        d: path("M 0 0 L 0 535.932 Q 320 534.148 640 493.113 T 1280 111.375 T 1920 -32.1854 L 1920 0 Z");
+      }
+    }
+
+    @keyframes waveAnimation2 {
+      0% {
+        d: path("M 0 0 L 0 537.728 Q 320 283.245 640 250.834 T 1280 403.516 T 1920 296.787 L 1920 0 Z");
+      }
+      50% {
+        d: path("M 0 0 L 0 547.728 Q 320 293.245 640 260.834 T 1280 413.516 T 1920 286.787 L 1920 0 Z");
+      }
+      100% {
+        d: path("M 0 0 L 0 537.728 Q 320 283.245 640 250.834 T 1280 403.516 T 1920 296.787 L 1920 0 Z");
+      }
+    }
+
+    @keyframes waveAnimation3 {
+      0% {
+        d: path("M 0 0 L 0 466.181 Q 320 489.767 640 452.281 T 1280 108.799 T 1920 119.943 L 1920 0 Z;");
+      }
+      50% {
+        d: path("M 0 0 L 0 456.181 Q 320 479.767 640 442.281 T 1280 98.799 T 1920 129.943 L 1920 0 Z");
+      }
+      100% {
+        d: path("M 0 0 L 0 466.181 Q 320 489.767 640 452.281 T 1280 108.799 T 1920 119.943 L 1920 0 Z");
+      }
+    }
+
+    @keyframes waveAnimation4 {
+      0% {
+        d: path("M 0 0 L 0 607.542 Q 320 511.98 640 465.234 T 1280 124.729 T 1920 171.185 L 1920 0 Z;");
+      }
+      50% {
+        d: path("M 0 0 L 0 617.542 Q 320 521.98 640 475.234 T 1280 134.729 T 1920 161.185 L 1920 0 Z");
+      }
+      100% {
+        d: path("M 0 0 L 0 607.542 Q 320 511.98 640 465.234 T 1280 124.729 T 1920 171.185 L 1920 0 Z");
+      }
+    }
+
+    @keyframes waveAnimation5 {
+      0% {
+        d: path("M 0 0 L 0 524.502 Q 320 347.637 640 320.026 T 1280 276.127 T 1920 7.0046 L 1920 0 Z;");
+      }
+      50% {
+        d: path("M 0 0 L 0 549.502 Q 320 357.637 640 330.026 T 1280 286.127 T 1920 37.0046 L 1920 0 Z");
+      }
+      100% {
+        d: path("M 0 0 L 0 524.502 Q 320 347.637 640 320.026 T 1280 276.127 T 1920 7.0046 L 1920 0 Z");
+      }
+    }
+
+    .wave1 {
+      animation: waveAnimation1 11s infinite ease-in-out;
+    }
+
+    .wave2 {
+      animation: waveAnimation2 13s infinite ease-in-out;
+    }
+
+    .wave3 {
+      animation: waveAnimation3 16s infinite ease-in-out;
+    }
+
+    .wave4 {
+      animation: waveAnimation4 18s infinite ease-in-out;
+    }
+
+    .wave5 {
+      animation: waveAnimation5 21s infinite ease-in-out;
+    }
+  </style>
+</svg>

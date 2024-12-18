@@ -1,0 +1,57 @@
+<?xml version="1.0" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="1080px" width="1920px">
+  <defs>
+    <pattern id="doodad" width="192" height="192" viewBox="0 0 40 40" patternUnits="userSpaceOnUse" class="tile-slide">
+      <rect width="100%" height="100%" fill="rgb(36, 127, 71)"/>
+      <path d="M0 40h-10v-60h60L40 0L32 8h-24v24z" fill="rgba(55, 160, 84,1)"/>
+      <path d="M40 0v10h60v60L0 40L8 32h24v-24z" fill="rgba(24, 114, 63,1)"/>
+      <path d="M40 0v10h60v60L0 40L0 40h40v-40z" fill="rgba(55, 160, 84,1)"/>
+      <path d="M0 40h-10v-60h60L40 0L40 0h-40v40z" fill="rgba(24, 114, 63,1)"/>
+    </pattern>
+    <style>
+            @keyframes slide {
+                0% { transform: translate(0px, 0px) rotate(0deg); }
+                5% { transform: translate(9.6px, 1px) rotate(0.1deg); }
+                10% { transform: translate(19.2px, 4px) rotate(0.2deg); }
+                15% { transform: translate(28.8px, 9px) rotate(0.4deg); }
+                20% { transform: translate(38.4px, 17px) rotate(0.5deg); }
+                25% { transform: translate(48px, 25px) rotate(0.4deg); }
+                30% { transform: translate(57.6px, 33px) rotate(0.2deg); }
+                35% { transform: translate(67.2px, 41px) rotate(0.1deg); }
+                40% { transform: translate(76.8px, 46px) rotate(-0deg); }
+                45% { transform: translate(86.4px, 49px) rotate(-0.1deg); }
+                50% { transform: translate(96px, 50px) rotate(-0.2deg); }
+                55% { transform: translate(105.6px, 49px) rotate(-0.3deg); }
+                60% { transform: translate(115.2px, 46px) rotate(-0.4deg); }
+                65% { transform: translate(124.8px, 41px) rotate(-0.5deg); }
+                70% { transform: translate(134.4px, 33px) rotate(-0.4deg); }
+                75% { transform: translate(144px, 25px) rotate(-0.3deg); }
+                80% { transform: translate(153.6px, 17px) rotate(-0.2deg); }
+                85% { transform: translate(163.2px, 9px) rotate(-0.1deg); }
+                90% { transform: translate(172.8px, 4px) rotate(0deg); }
+                95% { transform: translate(182.4px, 1px) rotate(0deg); }
+                100% { transform: translate(192px, 0px) rotate(0deg); }
+            }
+
+            .tile-slide {
+                animation: slide 30s infinite linear;
+            }
+
+            @keyframes shift {
+                0% { stop-color: rgba(0, 82, 96, 0.3); }
+                50% { stop-color: rgba(0, 113, 133, 0.5); }
+                100% { stop-color: rgba(0, 82, 96, 0.3); }
+            }
+
+            .color-shift {
+              animation: shift 10s infinite;
+            }
+        </style>
+  </defs>
+  <rect fill="url(#doodad)" height="200%" width="200%"/>
+  <linearGradient y2="0" y1="0.9" x2="0.7" x1="0" id="gradient">
+      <stop offset="0" stop-color="rgba(0, 10, 97, 0.9)"></stop>
+      <stop class="color-shift" offset="1" stop-color="rgba(0, 82, 96, 0.5)"></stop>
+    </linearGradient>
+  <rect width="200%" height="200%" opacity="1" fill="url(#gradient)"/>
+</svg>

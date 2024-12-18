@@ -60,15 +60,17 @@ body {
 
 .background {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   z-index: -10;
+  transition: opacity 0.5s ease-in-out;
   margin: 0;
   padding: 0;
   width: 100vw;
   min-width: max-content;
-  height: 100vh;
-  transition: opacity 0.5s ease-in-out;
+  height: 100%;
+  min-height: fit-content;
 }
 
 .fade-out {
