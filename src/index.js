@@ -6,14 +6,18 @@ import BlueGradient from "./assets/BlueGradient.svg";
 import OrangeWaves from "./assets/OrangeWaves.svg";
 import GreenTiles from "./assets/GreenTiles.svg";
 import PinkWaves from "./assets/PinkWaves.svg";
+import YellowZigZags from "./assets/YellowZigZags.svg";
 
 const nextBG = document.getElementById("background1");
 const currBG = document.getElementById("background2");
 
-var prevSecond = -1;
+// var prevSecond = -1;
 var grabCalled = false;
 
-// Modified version of w3schools' js clock example
+/**
+ * A modified version of w3schools' js clock example.
+ * Calls itself every half second.
+ */
 function clock() {
   const today = new Date();
   let h = today.getHours();
@@ -21,14 +25,17 @@ function clock() {
   let s = today.getSeconds();
 
   // At each second, refresh background (TESTING PURPOSES ONLY)
-  if (prevSecond !== s) {
-    prevSecond = s;
-    setBG(today);
-  }
+  // if (prevSecond !== s) {
+  //   prevSecond = s;
+  //   setBG(today);
+  // }
 
-  // At the top/bottom of each hour (XX:00:00 or XX:30:00), refresh the verse and background. A change should really only happen at midnight.
-  if (m % 30 === 0 && s === 0 && grabCalled) {
+  // A little after the top/bottom of each hour (XX:00:00 or XX:30:00), refresh the verse and background. 
+  // A verse change and non-night background change should really only happen a little after midnight
+  // Because we're calling clock() every 0.5 seconds, we have to check a flag that prevents this from being called twice in one second
+  if (m % 30 === 0 && s === 20 && grabCalled) {
     grabVerse();
+    setBG(today);
     grabCalled = false;
   } else {
     grabCalled = true;
@@ -36,88 +43,141 @@ function clock() {
 
   // Convert values to displayable format
   h = h % 12 === 0 ? 12 : h % 12;
-  m = checkTime(m);
+  m = formatTime(m);
   document.getElementById("clock").innerHTML = h + ":" + m;
 
   setTimeout(clock, 500);
 }
 
-function checkTime(i) {
+/**
+ * 
+ * @param {Number} i 
+ * @returns {*} Either the inputted number or a string that consists of the number and '0' appended in front of it
+ */
+function formatTime(i) {
   if (i < 10) {
     i = "0" + i;
   } // add zero in front of numbers < 10
   return i;
 }
 
+/**
+ * Given a date, sets the background depending on the date/time
+ * @param {Date} today 
+ * 
+ */
 function setBG(today) {
-  let d = today.getSeconds();
+  let d = today.getDay();
+  let h = today.getHours();
+
+  // The night background will override other backgrounds
+  // If the night background hasn't been activated and it's past 6pm, switch to that background
+  if ((h >= 18 || h < 6) && nextBG.src !== NightSky && currBG.src !== NightSky) {
+    nextBG.src = NightSky;
+    nextBG.classList.add("sway-bg");
+    currBG.classList.add("fade-out");
+
+    setTimeout(() => {
+      currBG.src = nextBG.src;
+      currBG.classList.add("sway-bg");
+      currBG.classList.remove("fade-out");
+
+      setTimeout(() => {
+        nextBG.classList.remove("sway-bg");
+      }, 5000);
+    }, 5000);
+    console.log("Here")
+    return;
+  } else if (h >= 18 || h < 6) {
+    return;
+  }
+
+  // Change background depending on the day. 0 = Sunday, 1 = Monday, etc.
+  // These are overridden by the night background
   switch (d % 7) {
     case 0:
       nextBG.src = BlueGradient;
-      currBG.classList.add("fade-out");
       break;
     case 1:
       nextBG.src = OrangeWaves;
-      currBG.classList.add("fade-out");
       break;
     case 2:
       nextBG.src = GreenTiles;
-      currBG.classList.add("fade-out");
       break;
     case 3:
       nextBG.src = PinkWaves;
-      currBG.classList.add("fade-out");
       break;
     case 4:
+      nextBG.src = YellowZigZags;
       break;
     case 5:
       nextBG.src = NightSky;
-      currBG.classList.add("fade-out");
       break;
     case 6:
       nextBG.src = HornPeak;
-      currBG.classList.add("fade-out");
       break;
     default:
       break;
   }
+
+  // Fade out the current background. This will reveal the next background
+  currBG.classList.add("fade-out");
+  // After 5 seconds (the length of the fade-out), do some swap shenanigans
   setTimeout(() => {
+    // Swap the current background to be the next background
     currBG.src = nextBG.src;
+
+    // Remove the swaying effect that's exclusive to the night background
+    currBG.classList.remove("sway-bg");
     currBG.classList.remove("fade-out");
-  }, 500);
+  }, 5000);
 }
 
+/**
+ * Given a date, sets the background and next background depending on the date/time
+ * @param {Date} today 
+ * 
+ */
 function setInitialBG(today) {
-  let d = today.getSeconds();
-  switch (d % 3) {
+  let d = today.getDay();
+  let h = today.getHours();
+
+  // The night background will override other backgrounds
+  // If the night background hasn't been activated and it's past 6pm, switch to that background
+  if (h >= 18 || h < 6) {
+    currBG.src = NightSky;
+    currBG.classList.add("sway-bg");
+    nextBG.src = null;
+    return;
+  }
+  
+  // If not "night-time," remove any swaying effect that's exclusive to the night background
+  // (This shouldn't actually remove anything, this is only here just in case)
+  currBG.classList.remove("sway-bg");
+
+  // Initialize backgrounds depending on the day
+  // These are overridden by the night background
+  switch (d % 7) {
     case 0:
-      // Start fade out
       currBG.src = BlueGradient;
-      nextBG.src = OrangeWaves;
       break;
     case 1:
       currBG.src = OrangeWaves;
-      nextBG.src = GreenTiles;
       break;
     case 2:
       currBG.src = GreenTiles;
-      nextBG.src = PinkWaves;
       break;
     case 3:
       currBG.src = PinkWaves;
-      nextBG.src = BlueGradient;
       break;
     case 4:
-      currBG.src = GreenTiles;
-      nextBG.src = HornPeak;
+      currBG.src = YellowZigZags;
       break;
     case 5:
       currBG.src = GreenTiles;
-      nextBG.src = HornPeak;
       break;
     case 6:
       currBG.src = HornPeak;
-      nextBG.src = BlueGradient;
       break;
     default:
       break;
