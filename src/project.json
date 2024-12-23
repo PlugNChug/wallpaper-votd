@@ -77,7 +77,7 @@
 				"order" : 100,
 				"text" : "Bible Version",
 				"type" : "combo",
-				"value" : "GREEK"
+				"value" : "ESV"
 			},
 			"bibleversion2" : 
 			{

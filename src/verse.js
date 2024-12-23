@@ -1,10 +1,7 @@
-import settings from "./project.json";
 import bollsFetch from "./verse-fetching/bollsFetch";
 import helloaoFetch from "./verse-fetching/helloaoFetch";
 
-export async function grabVerse() {
-  const translation = settings.general.properties.bibleversion.value;
-  const translation2 = settings.general.properties.bibleversion2.value;
+export async function grabVerse(translation, translation2) {
   if (["eng_asv", "BSB", "fra_sbl", "GREEK"].includes(translation)) {
     helloaoFetch(translation, translation2);
   } else {

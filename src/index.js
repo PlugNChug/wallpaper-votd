@@ -9,37 +9,47 @@ import PinkWaves from "./assets/PinkWaves.svg";
 import YellowZigZags from "./assets/YellowZigZags.svg";
 import SoftGradient from "./assets/SoftGradient.svg";
 
-const nextBG = document.getElementById("background1");
-const currBG = document.getElementById("background2");
-const nightBG = document.getElementById("background3");
+document.addEventListener("DOMContentLoaded", () => {
+  var version = "KJV";
+  var version2 = "KJV";
+  window.wallpaperPropertyListener = {
+    applyUserProperties: (properties) => {
+      if (properties.bibleversion) version = properties.bibleversion.value;
+      if (properties.bibleversion2) version2 = properties.bibleversion2.value;
 
-nightBG.src = NightSky;
+      screen(version, version2);
+    },
+  };  
+});
 
-// var prevSecond = -1;
-var grabCalled = false;
+function screen(version, version2) {
+  const nextBG = document.getElementById("background1");
+  const currBG = document.getElementById("background2");
+  const nightBG = document.getElementById("background3");
+
+  nightBG.src = NightSky;
+
+  setInitialBG(new Date(), currBG, nextBG, nightBG);
+  clock(false, currBG, nextBG, nightBG);
+  grabVerse(version, version2);
+}
 
 /**
  * A modified version of w3schools' js clock example.
  * Calls itself every half second.
  */
-function clock() {
+function clock(grabCalled, currBG, nextBG, nightBG) {
   const today = new Date();
   let h = today.getHours();
   let m = today.getMinutes();
   let s = today.getSeconds();
 
-  // At each second, refresh background (TESTING PURPOSES ONLY)
-  // if (prevSecond !== s) {
-  //   prevSecond = s;
-  //   setBG(today);
-  // }
-
-  // A little after the top/bottom of each hour (XX:00:00 or XX:30:00), refresh the verse and background. 
+  // A little after the top/bottom of each hour (XX:00:00 or XX:30:00), refresh the verse and background.
   // A verse change and non-night background change should really only happen a little after midnight
   // Because we're calling clock() every 0.5 seconds, we have to check a flag that prevents this from being called twice in one second
   if (m % 30 === 0 && s === 30 && grabCalled) {
     grabVerse();
-    setBG(today);
+    setBG(today, currBG, nextBG, nightBG);
     grabCalled = false;
   } else {
     grabCalled = true;
@@ -50,7 +60,9 @@ function clock() {
   m = formatTime(m);
   document.getElementById("clock").innerHTML = h + ":" + m;
   document.getElementById("day").innerHTML = today.getDate();
-  document.getElementById("month").innerHTML = today.toLocaleString('default', { month: 'short' }).toUpperCase();
+  document.getElementById("month").innerHTML = today
+    .toLocaleString("default", { month: "short" })
+    .toUpperCase();
   document.getElementById("year").innerHTML = today.getFullYear();
 
   // Call this every half second
@@ -58,8 +70,8 @@ function clock() {
 }
 
 /**
- * 
- * @param {Number} i 
+ *
+ * @param {Number} i
  * @returns {*} Either the inputted number or a string that consists of the number and '0' appended in front of it
  */
 function formatTime(i) {
@@ -71,10 +83,10 @@ function formatTime(i) {
 
 /**
  * Given a date, sets the background depending on the date/time
- * @param {Date} today 
- * 
+ * @param {Date} today
+ *
  */
-function setBG(today) {
+function setBG(today, currBG, nextBG, nightBG) {
   let d = today.getDay();
   let h = today.getHours();
 
@@ -130,10 +142,10 @@ function setBG(today) {
 
 /**
  * Given a date, sets the background and next background depending on the date/time
- * @param {Date} today 
- * 
+ * @param {Date} today
+ *
  */
-function setInitialBG(today) {
+function setInitialBG(today, currBG, nextBG, nightBG) {
   let d = today.getDay();
   let h = today.getHours();
 
@@ -173,17 +185,11 @@ function setInitialBG(today) {
       break;
   }
 
-  addTransitionToNight();
+  addTransitionToNight(nightBG);
 }
 
-function addTransitionToNight() {
+function addTransitionToNight(nightBG) {
   setTimeout(() => {
     nightBG.classList.add("transition");
   }, 250);
 }
-
-setInitialBG(new Date());
-clock();
-grabVerse();
-
-console.log("Everything should be on screen by now!");
