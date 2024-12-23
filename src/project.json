@@ -1,0 +1,169 @@
+{
+	"file" : "index.html",
+	"general" : 
+	{
+		"properties" : 
+		{
+			"bibleversion" : 
+			{
+				"index" : 0,
+				"options" : 
+				[
+					{
+						"label" : "en-ASV",
+						"value" : "eng_asv"
+					},
+					{
+						"label" : "en-BSB",
+						"value" : "BSB"
+					},
+					{
+						"label" : "en-ESV",
+						"value" : "ESV"
+					},
+					{
+						"label" : "en-KJV",
+						"value" : "KJV"
+					},
+					{
+						"label" : "en-NASB",
+						"value" : "NASB"
+					},
+					{
+						"label" : "en-NET",
+						"value" : "NET"
+					},
+					{
+						"label" : "en-NIV",
+						"value" : "NIV2011"
+					},
+					{
+						"label" : "en-NKJV",
+						"value" : "NKJV"
+					},
+					{
+						"label" : "en-NLT",
+						"value" : "NLT"
+					},
+					{
+						"label" : "en-RSV",
+						"value" : "RSV"
+					},
+					{
+						"label" : "en-WEB",
+						"value" : "WEB"
+					},
+					{
+						"label" : "es-BTX3",
+						"value" : "BTX3"
+					},
+					{
+						"label" : "es-LBLA",
+						"value" : "LBLA"
+					},
+					{
+						"label" : "es-RV1960",
+						"value" : "RV1960"
+					},
+					{
+						"label" : "fr-SBL",
+						"value" : "fra_sbl"
+					},
+					{
+						"label" : "el-SBL (Greek NT)",
+						"value" : "GREEK"
+					}
+				],
+				"order" : 100,
+				"text" : "Bible Version",
+				"type" : "combo",
+				"value" : "GREEK"
+			},
+			"bibleversion2" : 
+			{
+				"condition" : "bibleversion.value == \"GREEK\"",
+				"index" : 1,
+				"options" : 
+				[
+					{
+						"label" : "en-ASV",
+						"value" : "eng_asv"
+					},
+					{
+						"label" : "en-BSB",
+						"value" : "BSB"
+					},
+					{
+						"label" : "en-ESV",
+						"value" : "ESV"
+					},
+					{
+						"label" : "en-KJV",
+						"value" : "KJV"
+					},
+					{
+						"label" : "en-NASB",
+						"value" : "NASB"
+					},
+					{
+						"label" : "en-NET",
+						"value" : "NET"
+					},
+					{
+						"label" : "en-NIV",
+						"value" : "NIV2011"
+					},
+					{
+						"label" : "en-NKJV",
+						"value" : "NKJV"
+					},
+					{
+						"label" : "en-NLT",
+						"value" : "NLT"
+					},
+					{
+						"label" : "en-RSV",
+						"value" : "RSV"
+					},
+					{
+						"label" : "en-WEB",
+						"value" : "WEB"
+					},
+					{
+						"label" : "es-BTX3",
+						"value" : "BTX3"
+					},
+					{
+						"label" : "es-LBLA",
+						"value" : "LBLA"
+					},
+					{
+						"label" : "es-RV1960",
+						"value" : "RV1960"
+					},
+					{
+						"label" : "fr-SBL",
+						"value" : "fra_sbl"
+					}
+				],
+				"order" : 101,
+				"text" : "Secondary Bible Version",
+				"type" : "combo",
+				"value" : "KJV"
+			},
+			"schemecolor" : 
+			{
+				"order" : 0,
+				"text" : "ui_browse_properties_scheme_color",
+				"type" : "color",
+				"value" : "0 0 0"
+			}
+		}
+	},
+	"preview" : "preview.jpg",
+	"snapshotformat" : -1,
+	"snapshotoverlay" : "",
+	"title" : "VOTD",
+	"type" : "web",
+	"version" : 0
+}

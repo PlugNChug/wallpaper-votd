@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:svgjs="http://svgjs.dev/svgjs" viewBox="0 0 700 700" width="700" height="700">
+    <style>
+        @keyframes gradientAnimation {
+            0% {
+                stop-color: hsl(199, 69%, 53%);
+            }
+            25% {
+                stop-color: hsl(256, 60%, 60%);
+            }
+            50% {
+                stop-color: hsl(75, 60%, 45%);
+            }
+            75% {
+                stop-color: hsl(300, 60%, 60%);
+            }
+            100% {
+                stop-color: hsl(199, 69%, 53%);
+            }
+        }
+
+        @keyframes gradientAnimation2 {
+            0% {
+                stop-color: hsl(296, 60%, 68%);
+            }
+            25% {
+                stop-color: hsl(40, 50%, 52%);
+            }
+            50% {
+                stop-color: hsl(150, 50%, 50%);
+            }
+            75% {
+                stop-color: hsl(100, 60%, 45%);
+            }
+            100% {
+                stop-color: hsl(296, 60%, 68%);
+            }
+        }
+
+        #ffflux-gradient stop:first-child {
+            animation: gradientAnimation 35s infinite;
+        }
+
+        #ffflux-gradient stop:last-child {
+            animation: gradientAnimation2 16s infinite;
+        }
+
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        #ffflux-gradient {
+            animation: rotate 32s infinite;
+        }
+    </style>
+    <defs>
+        <linearGradient gradientTransform="rotate(150, 0.5, 0.5)" x1="50%" y1="0%" x2="50%"
+            y2="100%" id="ffflux-gradient">
+            <stop stop-color="hsl(199, 69%, 53%)" stop-opacity="1" offset="0%"></stop>
+            <stop stop-color="hsl(296, 60%, 68%)" stop-opacity="1" offset="100%"></stop>
+        </linearGradient>
+        <filter id="ffflux-filter" x="-20%" y="-20%" width="140%" height="140%"
+            filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse"
+            color-interpolation-filters="sRGB">
+            <feTurbulence type="fractalNoise" baseFrequency="0.005 0.003" numOctaves="1" seed="253"
+                stitchTiles="stitch" x="0%" y="0%" width="100%" height="100%" result="turbulence"></feTurbulence>
+            <feGaussianBlur stdDeviation="19 31" x="0%" y="0%" width="100%" height="100%"
+                in="turbulence" edgeMode="duplicate" result="blur"></feGaussianBlur>
+            <feBlend mode="lighten" x="0%" y="0%" width="100%" height="100%" in="SourceGraphic"
+                in2="blur" result="blend"></feBlend>
+        </filter>
+    </defs>
+    <rect width="700" height="700" fill="url(#ffflux-gradient)" filter="url(#ffflux-filter)"></rect>
+</svg>

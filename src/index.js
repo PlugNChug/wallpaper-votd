@@ -1,4 +1,4 @@
-import grabVerse from "./verse";
+import { grabVerse } from "./verse";
 import "./styles/main.scss";
 import HornPeak from "./assets/HornPeak.jpg";
 import NightSky from "./assets/NightSky.jpg";
@@ -7,9 +7,13 @@ import OrangeWaves from "./assets/OrangeWaves.svg";
 import GreenTiles from "./assets/GreenTiles.svg";
 import PinkWaves from "./assets/PinkWaves.svg";
 import YellowZigZags from "./assets/YellowZigZags.svg";
+import SoftGradient from "./assets/SoftGradient.svg";
 
 const nextBG = document.getElementById("background1");
 const currBG = document.getElementById("background2");
+const nightBG = document.getElementById("background3");
+
+nightBG.src = NightSky;
 
 // var prevSecond = -1;
 var grabCalled = false;
@@ -33,7 +37,7 @@ function clock() {
   // A little after the top/bottom of each hour (XX:00:00 or XX:30:00), refresh the verse and background. 
   // A verse change and non-night background change should really only happen a little after midnight
   // Because we're calling clock() every 0.5 seconds, we have to check a flag that prevents this from being called twice in one second
-  if (m % 30 === 0 && s === 20 && grabCalled) {
+  if (m % 30 === 0 && s === 30 && grabCalled) {
     grabVerse();
     setBG(today);
     grabCalled = false;
@@ -45,7 +49,11 @@ function clock() {
   h = h % 12 === 0 ? 12 : h % 12;
   m = formatTime(m);
   document.getElementById("clock").innerHTML = h + ":" + m;
+  document.getElementById("day").innerHTML = today.getDate();
+  document.getElementById("month").innerHTML = today.toLocaleString('default', { month: 'short' }).toUpperCase();
+  document.getElementById("year").innerHTML = today.getFullYear();
 
+  // Call this every half second
   setTimeout(clock, 500);
 }
 
@@ -72,24 +80,13 @@ function setBG(today) {
 
   // The night background will override other backgrounds
   // If the night background hasn't been activated and it's past 6pm, switch to that background
-  if ((h >= 18 || h < 6) && nextBG.src !== NightSky && currBG.src !== NightSky) {
-    nextBG.src = NightSky;
-    nextBG.classList.add("sway-bg");
-    currBG.classList.add("fade-out");
-
-    setTimeout(() => {
-      currBG.src = nextBG.src;
-      currBG.classList.add("sway-bg");
-      currBG.classList.remove("fade-out");
-
-      setTimeout(() => {
-        nextBG.classList.remove("sway-bg");
-      }, 5000);
-    }, 5000);
-    console.log("Here")
+  if ((h >= 18 || h < 6) && nightBG.classList.contains("invisible")) {
+    nightBG.classList.remove("invisible");
     return;
   } else if (h >= 18 || h < 6) {
     return;
+  } else {
+    nightBG.classList.add("invisible");
   }
 
   // Change background depending on the day. 0 = Sunday, 1 = Monday, etc.
@@ -111,7 +108,7 @@ function setBG(today) {
       nextBG.src = YellowZigZags;
       break;
     case 5:
-      nextBG.src = NightSky;
+      nextBG.src = SoftGradient;
       break;
     case 6:
       nextBG.src = HornPeak;
@@ -121,15 +118,13 @@ function setBG(today) {
   }
 
   // Fade out the current background. This will reveal the next background
-  currBG.classList.add("fade-out");
+  currBG.classList.add("invisible");
   // After 5 seconds (the length of the fade-out), do some swap shenanigans
   setTimeout(() => {
     // Swap the current background to be the next background
     currBG.src = nextBG.src;
 
-    // Remove the swaying effect that's exclusive to the night background
-    currBG.classList.remove("sway-bg");
-    currBG.classList.remove("fade-out");
+    currBG.classList.remove("invisible");
   }, 5000);
 }
 
@@ -145,15 +140,10 @@ function setInitialBG(today) {
   // The night background will override other backgrounds
   // If the night background hasn't been activated and it's past 6pm, switch to that background
   if (h >= 18 || h < 6) {
-    currBG.src = NightSky;
-    currBG.classList.add("sway-bg");
-    nextBG.src = null;
+    nightBG.classList.remove("invisible");
+    addTransitionToNight();
     return;
   }
-  
-  // If not "night-time," remove any swaying effect that's exclusive to the night background
-  // (This shouldn't actually remove anything, this is only here just in case)
-  currBG.classList.remove("sway-bg");
 
   // Initialize backgrounds depending on the day
   // These are overridden by the night background
@@ -174,7 +164,7 @@ function setInitialBG(today) {
       currBG.src = YellowZigZags;
       break;
     case 5:
-      currBG.src = GreenTiles;
+      currBG.src = SoftGradient;
       break;
     case 6:
       currBG.src = HornPeak;
@@ -182,10 +172,18 @@ function setInitialBG(today) {
     default:
       break;
   }
+
+  addTransitionToNight();
+}
+
+function addTransitionToNight() {
+  setTimeout(() => {
+    nightBG.classList.add("transition");
+  }, 250);
 }
 
 setInitialBG(new Date());
 clock();
-await grabVerse();
+grabVerse();
 
 console.log("Everything should be on screen by now!");

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Outfit&display=swap");
 
 $primary-color: #efefef;
 $secondary-color: #f4f4f4;
@@ -6,7 +6,7 @@ $box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1);
 
 @mixin text {
   color: $secondary-color;
-  font-family: "Outfit", serif;
+  font-family: "Outfit", Helvetica, sans-serif;
   text-shadow: 1px 1px 3px black;
 }
 
@@ -33,7 +33,7 @@ $box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1);
     transform: scale3d(1, 1, 1);
     opacity: 0;
   }
-  
+
   40% {
     opacity: 0.5;
   }
@@ -64,13 +64,16 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: -10;
-  transition: opacity 5s ease-in-out;
   margin: 0;
   padding: 0;
   width: 100vw;
   min-width: max-content;
   height: 100%;
   min-height: fit-content;
+}
+
+.transition {
+  transition: opacity 5s ease-in-out;
 }
 
 .sway-bg {
@@ -98,43 +101,91 @@ body {
   }
 }
 
-.fade-out {
+.invisible {
   opacity: 0; /* Fade out effect */
 }
 
-.clock {
+.time {
+  display: flex;
   position: absolute;
   top: 0;
-  right: 0;
-  margin-right: 2vw;
+  right: 2vw;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
   color: $secondary-color;
   font-weight: bolder;
-  font-size: 2em;
-  font-family: "Monaco", "Courier New", monospace;
+  font-family: "Outfit", Helvetica, sans-serif;
+  font-variant-numeric: tabular-nums lining-nums;
+  text-align: right;
   text-shadow: 1px 1px 2px black;
+}
+
+.clock {
+  margin-top: -1em;
+  padding: 0;
+  font-size: 2em;
+}
+
+.date {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: fr 1fr;
+  grid-template-areas:
+    "Month Day"
+    "Month Year";
+  grid-auto-flow: row;
+  gap: 0 1em;
+}
+
+.month {
+  grid-area: Month;
+  align-self: center;
+  font-size: 3em;
+}
+
+.day {
+  grid-area: Day;
+  align-self: end;
+  margin-bottom: -1em;
+  font-size: 1.5em;
+  line-height: 1;
+  text-align: left;
+}
+
+.year {
+  grid-area: Year;
+  align-self: start;
+  margin-top: -1em;
+  font-size: 1.5em;
+  line-height: 1;
 }
 
 .load {
   position: absolute;
   top: 50%;
   left: 50%;
+  transform: translate(-50%, -50%);
   margin: 0;
   padding: 0;
-  transform: translate(-50%, -50%);
   @include text();
   font-size: 16px;
 }
 
 .verse {
   @include text();
-  font-size: 20px;
   margin-top: 0;
+  font-size: 20px;
 }
 
 .source {
   @include text();
   margin: 0;
   font-size: 40px;
+}
+
+.textfade {
+  transition: opacity 1s ease-in-out;
 }
 
 .container {

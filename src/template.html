@@ -6,14 +6,27 @@
     <title><%= htmlWebpackPlugin.options.title %></title>
 </head>
 <body>
-    <img id="background1" class="background">
-    <img id="background2" class="background">
-    <img id="background3" class="background fade-out sway-bg">
-    <p id="clock" class="clock"></p>
+    <img id="background1" class="background transition">
+    <img id="background2" class="background transition">
+    <img id="background3" class="background invisible sway-bg">
+    <div class="time">
+        <div class="date">
+            <div class="month">
+              <p id="month"></p>
+            </div>
+            <div class="day">
+                <p id="day"></p>
+            </div>
+            <div class="year">
+                <p id="year"></p>
+            </div>
+          </div>
+        <p id="clock" class="clock"></p>
+    </div>
     <div class="container">
-        <p id="load" class="load">Loading the daily verse...</p>
-        <p id="verse" class="verse"></p>
-        <p id="source" class="source"></p>
+        <p id="load" class="load textfade">Loading the daily verse...</p>
+        <p id="verse" class="verse invisible"></p>
+        <p id="source" class="source invisible"></p>
     </div>
 </body>
 </html>
