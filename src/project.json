@@ -1,9 +1,19 @@
 {
+	"contentrating" : "Everyone",
+	"description" : "Gets the verse of the day from a proxy of verseoftheday.com.\n\n[i]Verse fetching may take up to a minute initially, as the proxy used \"hibernates\" after periods of no activity.[/i]\n\nThere are many versions to choose from, such as KJV, ESV, and NIV, plus some options in other languages.\n\nThe background changes based on the day of the week and the time of day. Each day of the week's background is either a photo or an abstract vector image, but at night (18:00-06:00/6pm-6am) it will change to what you see on the preview.",
 	"file" : "index.html",
 	"general" : 
 	{
 		"properties" : 
 		{
+			"_24hourtime" : 
+			{
+				"index" : 2,
+				"order" : 102,
+				"text" : "24 Hour Time",
+				"type" : "bool",
+				"value" : false
+			},
 			"bibleversion" : 
 			{
 				"index" : 0,
@@ -77,7 +87,7 @@
 				"order" : 100,
 				"text" : "Bible Version",
 				"type" : "combo",
-				"value" : "ESV"
+				"value" : "KJV"
 			},
 			"bibleversion2" : 
 			{
@@ -161,9 +171,12 @@
 		}
 	},
 	"preview" : "preview.jpg",
+	"ratingsex" : "none",
+	"ratingviolence" : "none",
 	"snapshotformat" : -1,
 	"snapshotoverlay" : "",
-	"title" : "VOTD",
+	"tags" : [ "Relaxing" ],
+	"title" : "Bible Verse of the Day",
 	"type" : "web",
 	"version" : 0
 }

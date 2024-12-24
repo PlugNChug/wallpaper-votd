@@ -9,14 +9,19 @@ import PinkWaves from "./assets/PinkWaves.svg";
 import YellowZigZags from "./assets/YellowZigZags.svg";
 import SoftGradient from "./assets/SoftGradient.svg";
 
+var intervalID = null;
+
 document.addEventListener("DOMContentLoaded", () => {
   var version = "KJV";
   var version2 = "KJV";
+  var _24hourtime = false;
   window.wallpaperPropertyListener = {
     applyUserProperties: (properties) => {
       if (properties.bibleversion) version = properties.bibleversion.value;
       if (properties.bibleversion2) version2 = properties.bibleversion2.value;
-      screen(version, version2);
+      if (properties._24hourtime) _24hourtime = properties._24hourtime.value;
+      console.log(_24hourtime);
+      screen(version, version2, _24hourtime);
     },
   };
 
@@ -24,23 +29,37 @@ document.addEventListener("DOMContentLoaded", () => {
   // screen(version, version2);
 });
 
-function screen(version, version2) {
+function screen(version, version2, _24hourtime) {
   const nextBG = document.getElementById("background1");
   const currBG = document.getElementById("background2");
   const nightBG = document.getElementById("background3");
 
   nightBG.src = NightSky;
 
+  if (intervalID !== null) {
+    clearInterval(intervalID);
+  }
   setInitialBG(new Date(), currBG, nextBG, nightBG);
   grabVerse(version, version2);
-  setInterval(() => clock(false, currBG, nextBG, nightBG, version, version2), 500);
+  intervalID = setInterval(
+    () => clock(false, currBG, nextBG, nightBG, version, version2, _24hourtime),
+    500
+  );
 }
 
 /**
  * A modified version of w3schools' js clock example.
  * Calls itself every half second.
  */
-function clock(grabCalled, currBG, nextBG, nightBG, version, version2) {
+function clock(
+  grabCalled,
+  currBG,
+  nextBG,
+  nightBG,
+  version,
+  version2,
+  _24hourtime
+) {
   const today = new Date();
   let h = today.getHours();
   let m = today.getMinutes();
@@ -60,7 +79,9 @@ function clock(grabCalled, currBG, nextBG, nightBG, version, version2) {
   setBG(today, currBG, nextBG, nightBG);
 
   // Convert values to displayable format
-  h = h % 12 === 0 ? 12 : h % 12;
+  if (!_24hourtime) {
+    h = h % 12 === 0 ? 12 : h % 12;
+  }
   m = formatTime(m);
   document.getElementById("clock").innerHTML = h + ":" + m;
   document.getElementById("day").innerHTML = today.getDate();
@@ -68,9 +89,6 @@ function clock(grabCalled, currBG, nextBG, nightBG, version, version2) {
     .toLocaleString("default", { month: "short" })
     .toUpperCase();
   document.getElementById("year").innerHTML = today.getFullYear();
-
-  // Call this every half second
-  // setTimeout(clock, 500);
 }
 
 /**
