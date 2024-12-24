@@ -16,10 +16,12 @@ document.addEventListener("DOMContentLoaded", () => {
     applyUserProperties: (properties) => {
       if (properties.bibleversion) version = properties.bibleversion.value;
       if (properties.bibleversion2) version2 = properties.bibleversion2.value;
-
       screen(version, version2);
     },
-  };  
+  };
+
+  // To test outside of Wallpaper Engine, uncomment the following.
+  // screen(version, version2);
 });
 
 function screen(version, version2) {
@@ -30,30 +32,32 @@ function screen(version, version2) {
   nightBG.src = NightSky;
 
   setInitialBG(new Date(), currBG, nextBG, nightBG);
-  clock(false, currBG, nextBG, nightBG);
   grabVerse(version, version2);
+  setInterval(() => clock(false, currBG, nextBG, nightBG, version, version2), 500);
 }
 
 /**
  * A modified version of w3schools' js clock example.
  * Calls itself every half second.
  */
-function clock(grabCalled, currBG, nextBG, nightBG) {
+function clock(grabCalled, currBG, nextBG, nightBG, version, version2) {
   const today = new Date();
   let h = today.getHours();
   let m = today.getMinutes();
   let s = today.getSeconds();
 
   // A little after the top/bottom of each hour (XX:00:00 or XX:30:00), refresh the verse and background.
-  // A verse change and non-night background change should really only happen a little after midnight
-  // Because we're calling clock() every 0.5 seconds, we have to check a flag that prevents this from being called twice in one second
+  // A verse change should really only happen a little after midnight
+  // Because we're calling clock() every 0.5 seconds, we have to check a flag that prevents this from being called 2x in one second
   if (m % 30 === 0 && s === 30 && grabCalled) {
-    grabVerse();
-    setBG(today, currBG, nextBG, nightBG);
+    grabVerse(version, version2);
     grabCalled = false;
   } else {
     grabCalled = true;
   }
+
+  // Call the background switcher.
+  setBG(today, currBG, nextBG, nightBG);
 
   // Convert values to displayable format
   h = h % 12 === 0 ? 12 : h % 12;
@@ -66,7 +70,7 @@ function clock(grabCalled, currBG, nextBG, nightBG) {
   document.getElementById("year").innerHTML = today.getFullYear();
 
   // Call this every half second
-  setTimeout(clock, 500);
+  // setTimeout(clock, 500);
 }
 
 /**
@@ -153,7 +157,7 @@ function setInitialBG(today, currBG, nextBG, nightBG) {
   // If the night background hasn't been activated and it's past 6pm, switch to that background
   if (h >= 18 || h < 6) {
     nightBG.classList.remove("invisible");
-    addTransitionToNight();
+    addTransitionToNight(nightBG);
     return;
   }
 

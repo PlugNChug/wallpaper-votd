@@ -67,8 +67,6 @@ async function helloaoFetch(translation, translation2) {
                   .map(part => (typeof part === "string" ? part : part.text || ""))
                   .join(" ")
           }))[0].verse;
-
-          console.log(contents.filter(v => v.type === "verse" && v.number === verseRange[0])[0].content);
         } else {
           for (let i = verseRange[0]; i <= verseRange[1]; i++) {
             output += contents
