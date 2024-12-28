@@ -20,7 +20,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (properties.bibleversion) version = properties.bibleversion.value;
       if (properties.bibleversion2) version2 = properties.bibleversion2.value;
       if (properties._24hourtime) _24hourtime = properties._24hourtime.value;
-      console.log(_24hourtime);
       screen(version, version2, _24hourtime);
     },
   };
