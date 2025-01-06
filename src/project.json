@@ -1,6 +1,6 @@
 {
 	"contentrating" : "Everyone",
-	"description" : "Gets the verse of the day from a proxy of verseoftheday.com.\n\n[i]Verse fetching may take up to a minute initially, as the proxy used \"hibernates\" after periods of no activity.[/i]\n\nThere are many versions to choose from, such as KJV, ESV, and NIV, plus some options in other languages.\n\nThe background changes based on the day of the week and the time of day. Each day of the week's background is either a photo or an abstract vector image, but at night (18:00-06:00/6pm-6am) it will change to what you see on the preview.",
+	"description" : "Gets the verse of the day from a proxy of verseoftheday.com. Internet connection is required for the verse, otherwise you'll see the default verse.\n\n[i]Verse fetching may take up to a minute initially, as the proxy used \"hibernates\" after periods of no activity.[/i]\n\nThere are many versions to choose from, such as KJV, ESV, and NIV, plus some options in other languages.\n\nThe background changes based on the day of the week and the time of day. Each day of the week's background is either a photo or an abstract vector image, but at night (18:00-06:00/6pm-6am) it will change to what you see on the preview.\n\n27 Dec. 2024 UPDATE - Fixed the default verse not showing, fixed the Friday background.",
 	"file" : "index.html",
 	"general" : 
 	{
@@ -19,6 +19,10 @@
 				"index" : 0,
 				"options" : 
 				[
+					{
+						"label" : "VOTD Format (Modified NIV)",
+						"value" : "VOTD"
+					},
 					{
 						"label" : "en-ASV",
 						"value" : "eng_asv"
@@ -177,6 +181,9 @@
 	"snapshotoverlay" : "",
 	"tags" : [ "Relaxing" ],
 	"title" : "Bible Verse of the Day",
-	"type" : "web",
-	"version" : 0
+	"type" : "Web",
+	"version" : 2,
+	"visibility" : "public",
+	"workshopid" : "3393666431",
+	"workshopurl" : "steam://url/CommunityFilePage/3393666431"
 }

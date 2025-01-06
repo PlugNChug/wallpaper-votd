@@ -13,7 +13,7 @@ async function helloaoFetch(translation, translation2) {
       }
   
       // Obtain the link from the received data, then get the last portion of the link to obtain a preliminary string to parse further
-      const link = res.data;
+      const link = res.data[0];
       const parseableString = link.split("/")[link.split("/").length - 1];
   
       // Get the first item in the further split parseableString to obtain the string for book and chapter

@@ -20,7 +20,24 @@ app.get("/scrape", async (req, res) => {
       var link = $(this).attr("href");
       links.push(link);
     });
-    res.send(links[0]);
+
+    const verseElement = $(".bilingual-left")
+      .clone()
+      .find(".reference")
+      .remove()
+      .end();
+
+    // Proper capitalization of words like "LORD"
+    verseElement.find(".small-caps").each(function () {
+      const text = $(this).text().toUpperCase(); // Convert the text to uppercase
+      $(this).replaceWith(text); // Replace the <span> element with the uppercase text
+    });
+
+    var content = verseElement.text().trim();
+
+    var data = [links[0], content];
+
+    res.send(data);
   } catch (error) {
     res.status(500).send("Error fetching verse(s)...");
   }

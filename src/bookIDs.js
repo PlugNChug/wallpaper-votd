@@ -18,6 +18,7 @@ export const bookIDs = {
     "Esther": 17,
     "Job": 18,
     "Psalms": 19,
+    "Psalm": 19,
     "Proverbs": 20,
     "Ecclesiastes": 21,
     "Song": 22,
