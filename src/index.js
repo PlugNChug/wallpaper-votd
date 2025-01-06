@@ -35,8 +35,9 @@ function screen(version, version2, _24hourtime, forcebackground) {
   const nextBG = document.getElementById("background1");
   const currBG = document.getElementById("background2");
   const overlayBG = document.getElementById("background3");
-
-  overlayBG.src = NightSky;
+  if (overlayBG.src === null) {
+    overlayBG.src = NightSky;
+  }
 
   if (intervalID !== null) {
     clearInterval(intervalID);
@@ -136,9 +137,11 @@ function setBG(today, currBG, nextBG, overlayBG, forcebackground) {
   // The night background will override other backgrounds
   // If the night background hasn't been activated and it's past 6pm, switch to that background
   if ((h >= 18 || h < 6) && overlayBG.classList.contains("invisible")) {
+    overlayBG.src = NightSky;
     overlayBG.classList.remove("invisible");
     return;
   } else if (h >= 18 || h < 6) {
+    overlayBG.src = NightSky;
     return;
   } else {
     overlayBG.classList.add("invisible");
@@ -190,7 +193,7 @@ function setBG(today, currBG, nextBG, overlayBG, forcebackground) {
  */
 function setInitialBG(today, currBG, nextBG, overlayBG, forcebackground) {
   if (forcebackground !== "none") {
-    forceTheBackground(forcebackground);
+    forceTheBackground(overlayBG, forcebackground);
     overlayBG.classList.remove("invisible");
     return;
   } else {
@@ -203,8 +206,8 @@ function setInitialBG(today, currBG, nextBG, overlayBG, forcebackground) {
   // The night background will override other backgrounds
   // If the night background hasn't been activated and it's past 6pm, switch to that background
   if (h >= 18 || h < 6) {
+    overlayBG.src = NightSky;
     overlayBG.classList.remove("invisible");
-    addTransitionToNight(overlayBG);
     return;
   }
 
@@ -235,17 +238,9 @@ function setInitialBG(today, currBG, nextBG, overlayBG, forcebackground) {
     default:
       break;
   }
-
-  addTransitionToNight(overlayBG);
 }
 
-function addTransitionToNight(overlayBG) {
-  setTimeout(() => {
-    overlayBG.classList.add("transition");
-  }, 250);
-}
-
-function forceTheBackground(forcebackground) {
+function forceTheBackground(overlayBG, forcebackground) {
   switch (forcebackground) {
     case "night":
       overlayBG.src = NightSky;
@@ -271,8 +266,8 @@ function forceTheBackground(forcebackground) {
     case "gradient":
       overlayBG.src = SoftGradient;
       break;
-
     default:
+      overlayBG.src = NightSky;
       break;
   }
 }
