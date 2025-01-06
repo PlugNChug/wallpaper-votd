@@ -11,7 +11,7 @@ async function helloaoFetch(translation, translation2) {
         defaultVerse();
         return;
       }
-  
+
       // Obtain the link from the received data, then get the last portion of the link to obtain a preliminary string to parse further
       const link = res.data[0];
       const parseableString = link.split("/")[link.split("/").length - 1];
@@ -43,7 +43,7 @@ async function helloaoFetch(translation, translation2) {
           translation = "grc_sbl1";
         }
       }
-  
+      
       // Fetch from Free Use Bible API. This option is better for ASV (since Bolls Bible API doesn't have ASV) and BSB (No intro blurbs in Psalms)
       fetch(`https://bible.helloao.org/api/${translation}/${bookCodes[book]}/${chapterString}.json`)
       .then(request => request.json())
@@ -54,8 +54,6 @@ async function helloaoFetch(translation, translation2) {
 
         // What we're looking for is a bit nested within the JSON...
         var contents = chapter.chapter.content;
-
-        
         
         // Account for either a single verse or a verse range.
         // Add the targeted verse's text to the output. The text itself is also pretty nested in the data...

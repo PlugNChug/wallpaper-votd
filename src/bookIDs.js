@@ -88,6 +88,7 @@ export const bookCodes = {
     "Esther": "EST",
     "Job": "JOB",
     "Psalms": "PSA",
+    "Psalm": "PSA",
     "Proverbs": "PRO",
     "Ecclesiastes": "ECC",
     "Song": "SNG",

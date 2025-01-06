@@ -12,8 +12,8 @@ import SoftGradient from "./assets/SoftGradient.svg";
 var intervalID = null;
 
 document.addEventListener("DOMContentLoaded", () => {
-  var version = "VOTD";
-  var version2 = "VOTD";
+  var version = "BSB";
+  var version2 = "BSB";
   var _24hourtime = false;
   window.wallpaperPropertyListener = {
     applyUserProperties: (properties) => {
@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // To test outside of Wallpaper Engine, uncomment the following, npm run dev
-  // screen(version, version2);
+  screen(version, version2);
 });
 
 function screen(version, version2, _24hourtime) {
