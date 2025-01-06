@@ -15,33 +15,46 @@ document.addEventListener("DOMContentLoaded", () => {
   var version = "BSB";
   var version2 = "BSB";
   var _24hourtime = false;
+  var forcebackground = "none";
   window.wallpaperPropertyListener = {
     applyUserProperties: (properties) => {
       if (properties.bibleversion) version = properties.bibleversion.value;
       if (properties.bibleversion2) version2 = properties.bibleversion2.value;
       if (properties._24hourtime) _24hourtime = properties._24hourtime.value;
-      screen(version, version2, _24hourtime);
+      if (properties.forcebackground)
+        forcebackground = properties.forcebackground.value;
+      screen(version, version2, _24hourtime, forcebackground);
     },
   };
 
   // To test outside of Wallpaper Engine, uncomment the following, npm run dev
-  screen(version, version2);
+  // screen(version, version2, _24hourtime, forcebackground);
 });
 
-function screen(version, version2, _24hourtime) {
+function screen(version, version2, _24hourtime, forcebackground) {
   const nextBG = document.getElementById("background1");
   const currBG = document.getElementById("background2");
-  const nightBG = document.getElementById("background3");
+  const overlayBG = document.getElementById("background3");
 
-  nightBG.src = NightSky;
+  overlayBG.src = NightSky;
 
   if (intervalID !== null) {
     clearInterval(intervalID);
   }
-  setInitialBG(new Date(), currBG, nextBG, nightBG);
+  setInitialBG(new Date(), currBG, nextBG, overlayBG, forcebackground);
   grabVerse(version, version2);
   intervalID = setInterval(
-    () => clock(false, currBG, nextBG, nightBG, version, version2, _24hourtime),
+    () =>
+      clock(
+        false,
+        currBG,
+        nextBG,
+        overlayBG,
+        version,
+        version2,
+        _24hourtime,
+        forcebackground
+      ),
     500
   );
 }
@@ -54,10 +67,11 @@ function clock(
   grabCalled,
   currBG,
   nextBG,
-  nightBG,
+  overlayBG,
   version,
   version2,
-  _24hourtime
+  _24hourtime,
+  forcebackground
 ) {
   const today = new Date();
   let h = today.getHours();
@@ -75,7 +89,7 @@ function clock(
   }
 
   // Call the background switcher.
-  setBG(today, currBG, nextBG, nightBG);
+  setBG(today, currBG, nextBG, overlayBG, forcebackground);
 
   // Convert values to displayable format
   if (!_24hourtime) {
@@ -107,19 +121,27 @@ function formatTime(i) {
  * @param {Date} today
  *
  */
-function setBG(today, currBG, nextBG, nightBG) {
+function setBG(today, currBG, nextBG, overlayBG, forcebackground) {
+  if (forcebackground !== "none") {
+    forceTheBackground(forcebackground);
+    overlayBG.classList.remove("invisible");
+    return;
+  } else {
+    overlayBG.classList.add("invisible");
+  }
+
   let d = today.getDay();
   let h = today.getHours();
 
   // The night background will override other backgrounds
   // If the night background hasn't been activated and it's past 6pm, switch to that background
-  if ((h >= 18 || h < 6) && nightBG.classList.contains("invisible")) {
-    nightBG.classList.remove("invisible");
+  if ((h >= 18 || h < 6) && overlayBG.classList.contains("invisible")) {
+    overlayBG.classList.remove("invisible");
     return;
   } else if (h >= 18 || h < 6) {
     return;
   } else {
-    nightBG.classList.add("invisible");
+    overlayBG.classList.add("invisible");
   }
 
   // Change background depending on the day. 0 = Sunday, 1 = Monday, etc.
@@ -166,15 +188,23 @@ function setBG(today, currBG, nextBG, nightBG) {
  * @param {Date} today
  *
  */
-function setInitialBG(today, currBG, nextBG, nightBG) {
+function setInitialBG(today, currBG, nextBG, overlayBG, forcebackground) {
+  if (forcebackground !== "none") {
+    forceTheBackground(forcebackground);
+    overlayBG.classList.remove("invisible");
+    return;
+  } else {
+    overlayBG.classList.add("invisible");
+  }
+
   let d = today.getDay();
   let h = today.getHours();
 
   // The night background will override other backgrounds
   // If the night background hasn't been activated and it's past 6pm, switch to that background
   if (h >= 18 || h < 6) {
-    nightBG.classList.remove("invisible");
-    addTransitionToNight(nightBG);
+    overlayBG.classList.remove("invisible");
+    addTransitionToNight(overlayBG);
     return;
   }
 
@@ -206,11 +236,43 @@ function setInitialBG(today, currBG, nextBG, nightBG) {
       break;
   }
 
-  addTransitionToNight(nightBG);
+  addTransitionToNight(overlayBG);
 }
 
-function addTransitionToNight(nightBG) {
+function addTransitionToNight(overlayBG) {
   setTimeout(() => {
-    nightBG.classList.add("transition");
+    overlayBG.classList.add("transition");
   }, 250);
+}
+
+function forceTheBackground(forcebackground) {
+  switch (forcebackground) {
+    case "night":
+      overlayBG.src = NightSky;
+      break;
+    case "mountain":
+      overlayBG.src = HornPeak;
+      break;
+    case "blue":
+      overlayBG.src = BlueGradient;
+      break;
+    case "green":
+      overlayBG.src = GreenTiles;
+      break;
+    case "orange":
+      overlayBG.src = OrangeWaves;
+      break;
+    case "pink":
+      overlayBG.src = PinkWaves;
+      break;
+    case "yellow":
+      overlayBG.src = YellowZigZags;
+      break;
+    case "gradient":
+      overlayBG.src = SoftGradient;
+      break;
+
+    default:
+      break;
+  }
 }
