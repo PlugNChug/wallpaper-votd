@@ -100,6 +100,10 @@
 				"options" : 
 				[
 					{
+						"label" : "VOTD Format",
+						"value" : "VOTD"
+					},
+					{
 						"label" : "en-ASV",
 						"value" : "eng_asv"
 					},
