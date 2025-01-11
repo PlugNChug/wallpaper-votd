@@ -12,8 +12,8 @@ import SoftGradient from "./assets/SoftGradient.svg";
 var intervalID = null;
 
 document.addEventListener("DOMContentLoaded", () => {
-  var version = "BSB";
-  var version2 = "BSB";
+  var version = "VOTD";
+  var version2 = "VOTD";
   var _24hourtime = false;
   var forcebackground = "none";
   window.wallpaperPropertyListener = {

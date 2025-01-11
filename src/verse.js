@@ -29,7 +29,7 @@ export async function grabVerseAgain(translation) {
 }
 
 async function votd(translation) {
-  await axios.get("http://localhost:1332/scrape").then((res) => {
+  await axios.get("https://votd-grabber.onrender.com/scrape").then((res) => {
     // If no connection, or some sort of error occurred when connecting, abort and do the default verse: Proverbs 3:5-6
     if (res.status !== 200) {
       defaultVerse();
