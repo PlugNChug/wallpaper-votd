@@ -3,13 +3,11 @@ import defaultVerse from "./defaultVerse";
 import { bookIDs, bookCodes } from "../bookIDs";
 import { grabVerseAgain } from "../verse";
 
-async function helloaoFetch(translation, translation2) {
+async function helloaoFetch(translation, translation2, triedAgain = false) {
   try {
     await axios.get("https://votd-grabber.onrender.com/scrape").then((res) => {
-      // If no connection, or some sort of error occurred when connecting, abort and do the default verse: Proverbs 3:5-6
       if (res.status !== 200) {
-        defaultVerse();
-        return;
+        throw new Error("Non-200 status.");
       }
 
       // Obtain the link from the received data, then get the last portion of the link to obtain a preliminary string to parse further
@@ -105,8 +103,16 @@ async function helloaoFetch(translation, translation2) {
       });
     });
   } catch (error) {
-    console.error(error);
-    defaultVerse();
+    // If some error happened (like no connection), try again in 15 seconds.
+    // If we already tried again, abort and do the default verse: Proverbs 3:5-6
+    if (!triedAgain) {
+      setTimeout(() => {
+        helloaoFetch(translation, translation2, true);
+      }, 15000);
+    } else {
+      console.error("Verse fetch failed, showing default verse. - ", error);
+      defaultVerse();
+    }
   }
 }
 
