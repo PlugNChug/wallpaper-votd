@@ -10,49 +10,53 @@
       <stop offset="66%" stop-color="rgba(255, 234, 0, 0)" />
     </linearGradient>
     <radialGradient id="grad2" gradientTransform="translate(-0.5 -0.5) scale(2, 2)">
-      <stop offset="0%" stop-color="rgba(0, 0, 0, 0)"/>
-      <stop offset="25%" stop-color="rgba(54, 31, 34, 0.13)"/>
-      <stop offset="50%" stop-color="rgba(117, 48, 52, 0.25)"/>
-      <stop offset="100%" stop-color="rgba(155, 85, 0, 0.5)"/>
+      <stop offset="0%" stop-color="rgba(0, 0, 0, 0)" />
+      <stop offset="25%" stop-color="rgba(54, 31, 34, 0.13)" />
+      <stop offset="50%" stop-color="rgba(117, 48, 52, 0.25)" />
+      <stop offset="100%" stop-color="rgba(155, 85, 0, 0.5)" />
     </radialGradient>
   </defs>
   <rect fill='#6E6A1F' width='100%' height='100%' />
   <rect fill="url(#zigs)" width="100%" height="100%" />
   <rect fill="url(#grad1)" opacity="0.35" class="gradient-shift" height="100%" width="300%" />
-  <rect fill="url(#grad2)" height="100%" width="100%"/>
+  <rect fill="url(#grad2)" height="100%" width="100%" />
   <style>
     @keyframes shift1 {
-      0% { transform: translate(0, 0) }
-      100% { transform: translate(-200%, 0) }
+    0% { transform: translate(0, 0) }
+    100% { transform: translate(-200%, 0) }
     }
 
     .gradient-shift {
-      animation: shift1 60s infinite linear;
+    animation: shift1 60s infinite linear;
     }
 
     @keyframes shift2 {
-      0% {
-        d: path("M60,120 L120,60 L120,0 L60,60 L0,0 L0,60 Z");
-      }
-      50% {
-        d: path("M60,90 L120,60 L120,30 L60,60 L0,30 L0,60 Z");
-      }
-      100% {
-        d: path("M60,120 L120,60 L120,0 L60,60 L0,0 L0,60 Z");
-      }
+    0% {
+    d: path("M60,120 L120,60 L120,0 L60,60 L0,0 L0,60 Z");
+    }
+    50% {
+    d: path("M60,90 L120,60 L120,30 L60,60 L0,30 L0,60 Z");
+    }
+    100% {
+    d: path("M60,120 L120,60 L120,0 L60,60 L0,0 L0,60 Z");
+    }
     }
 
     .zig-shift {
-      animation: shift2 40s infinite ease-in-out;
+    animation: shift2 40s infinite ease-in-out;
     }
 
     @keyframes scroll {
-      0% { transform: translate(0, 0) }
-      100% { transform: translate(-100%, -100%) }
+    0% { transform: translate(0, 0) }
+    100% { transform: translate(-100%, -100%) }
     }
 
     .scroll {
-      animation: scroll 400s infinite linear;
+    animation: scroll 400s infinite linear;
+    }
+
+    .paused {
+    animation-play-state: paused !important;
     }
   </style>
 </svg>
