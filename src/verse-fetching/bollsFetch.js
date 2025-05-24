@@ -1,6 +1,7 @@
 const axios = require("axios");
 import defaultVerse from "./defaultVerse";
 import { bookIDs } from "../bookIDs";
+import dataParser from "./helperFunctions";
 
 async function bollsFetch(translation, triedAgain = false) {
   try {
@@ -10,31 +11,8 @@ async function bollsFetch(translation, triedAgain = false) {
       }
 
       // Obtain the link from the received data, then get the last portion of the link to obtain a preliminary string to parse further
-      const link = res.data[0];
-      const parseableString = link.split("/")[link.split("/").length - 1];
-
-      // Get the first item in the further split parseableString to obtain the string for book and chapter
-      const locationString = parseableString.split(".")[0];
-
-      var book = "NULL";
-      var chapterString = "NULL";
-      var strIndex = 1;
-      while (
-        !isNaN(locationString.substring(locationString.length - 1 - strIndex))
-      ) {
-        strIndex++;
-      }
-      book = locationString.substring(0, locationString.length - strIndex);
-      chapterString = locationString.substring(
-        locationString.length - strIndex
-      );
-
-      // Get the second item in the further split parseableString to obtain a verse number range.
-      // This range can either be a single verse or an actual range of verses.
-      // String representations of numbers will be converted to actual numbers.
-      const verseString = parseableString.split(".")[1];
-      const verseRange = verseString.split("-").map(Number);
-
+      const [book, chapterString, verseRange, verseString] = dataParser(res.data[0]);
+      
       // Fetch from Bolls Bible API.
       fetch(
         `https://bolls.life/get-text/${translation}/${bookIDs[book]}/${chapterString}/`
@@ -43,8 +21,6 @@ async function bollsFetch(translation, triedAgain = false) {
         .then((chapter) => {
           // The string we're gonna output in the end.
           var output = "";
-
-          // console.log(chapter);
 
           // Account for either a single verse or a verse range.
           // Add the targeted verse's text to the output.
@@ -69,12 +45,12 @@ async function bollsFetch(translation, triedAgain = false) {
           output = output.replace(/<\/?i>/g, "");
 
           // Remove unpaired quotes
-          if (output.split("'").length - 1 === 1) {
-            output = output.replace("'", "");
-          }
-          if (output.split("\"").length - 1 === 1) {
-            output = output.replace("\"", "");
-          }
+            // if (output.split("'").length - 1 === 1) {
+            //   output = output.replace("'", "");
+            // }
+            // if (output.split("\"").length - 1 === 1) {
+            //   output = output.replace("\"", "");
+            // }
 
           // Remove weird symbols, etc.
           output = output.replace(/ [^\p{L}\p{N}\s.,!?'"(){}[\]:;]/gu, "");
@@ -109,7 +85,7 @@ async function bollsFetch(translation, triedAgain = false) {
     // If we already tried again, abort and do the default verse: Proverbs 3:5-6
     if (!triedAgain) {
       setTimeout(() => {
-        helloaoFetch(translation, translation2, true);
+        bollsFetch(translation, true);
       }, 15000);
     } else {
       console.error("Verse fetch failed, showing default verse. - ", error);

@@ -6,9 +6,9 @@
     <title><%= htmlWebpackPlugin.options.title %></title>
 </head>
 <body>
-    <img id="background1" class="background transition">
-    <img id="background2" class="background transition">
-    <img id="background3" class="background invisible sway-bg transition">
+    <div id="background1" class="background transition"></div>
+    <div id="background2" class="background transition"></div>
+    <div id="background3" class="background invisible transition"></div>
     <div class="time">
         <div class="date">
             <div class="month">
@@ -23,7 +23,7 @@
           </div>
         <p id="clock" class="clock"></p>
     </div>
-    <div class="container">
+    <div id="box" class="container">
         <p id="load" class="load textfade">Loading the daily verse...</p>
         <p id="verse" class="verse invisible"></p>
         <p id="source" class="source invisible"></p>

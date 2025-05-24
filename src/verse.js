@@ -2,6 +2,7 @@ const axios = require("axios");
 import defaultVerse from "./verse-fetching/defaultVerse";
 import bollsFetch from "./verse-fetching/bollsFetch";
 import helloaoFetch from "./verse-fetching/helloaoFetch";
+import dataParser from "./verse-fetching/helperFunctions";
 
 export async function grabVerse(translation, translation2) {
   if (translation === "VOTD") {
@@ -39,37 +40,9 @@ async function votd(translation, triedAgain = false) {
       }
   
       // Obtain the link from the received data, then get the last portion of the link to obtain a preliminary string to parse further
-      const link = res.data[0];
-      const parseableString = link.split("/")[link.split("/").length - 1];
-  
-      // Get the first item in the further split parseableString to obtain the string for book and chapter
-      const locationString = parseableString.split(".")[0];
-  
-      var book = "NULL";
-      var chapterString = "NULL";
-      var strIndex = 1;
-      while (
-        !isNaN(locationString.substring(locationString.length - 1 - strIndex))
-      ) {
-        strIndex++;
-      }
-      book = locationString.substring(0, locationString.length - strIndex);
+      const [book, chapterString, verseRange, verseString] = dataParser(res.data[0]);
+
       if (book === "Song") book = "Song of Solomon";
-      chapterString = locationString.substring(locationString.length - strIndex);
-  
-      // Get the second item in the further split parseableString to obtain a verse number range.
-      // This range can either be a single verse or an actual range of verses.
-      // String representations of numbers will be converted to actual numbers.
-      const verseString = parseableString.split(".")[1];
-  
-      if (translation === "GREEK") {
-        if (bookIDs[book] < 40) {
-          grabVerseAgain(translation2);
-          return;
-        } else {
-          translation = "grc_sbl1";
-        }
-      }
   
       // Set the corresponding elements to the loaded verse and chapter.
       document.getElementById("verse").innerHTML = res.data[1];

@@ -2,10 +2,12 @@ const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
 const cheerio = require("cheerio");
+const rateLimit = require("express-rate-limit");
 
 const app = express();
 
 app.use(cors()); // Enable CORS for all routes
+app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 })); // Limit requests to prevent abuse
 
 app.get("/scrape", async (req, res) => {
   try {

@@ -8,9 +8,109 @@
 		{
 			"_24hourtime" : 
 			{
-				"index" : 2,
+				"index" : 3,
 				"order" : 102,
 				"text" : "24 Hour Time",
+				"type" : "bool",
+				"value" : false
+			},
+			"disableclock" : 
+			{
+				"index" : 2,
+				"order" : 103,
+				"text" : "Disable Date/Time",
+				"type" : "bool",
+				"value" : false
+			},
+			"forcebackground" : 
+			{
+				"index" : 4,
+				"options" : 
+				[
+					{
+						"label" : "Default Cycle",
+						"value" : "none"
+					},
+					{
+						"label" : "Custom Image",
+						"value" : "customimage"
+					},
+					{
+						"label" : "Custom Video",
+						"value" : "customvideo"
+					},
+					{
+						"label" : "Night Sky",
+						"value" : "night"
+					},
+					{
+						"label" : "Mountains",
+						"value" : "mountain"
+					},
+					{
+						"label" : "Blue Triangles",
+						"value" : "blue"
+					},
+					{
+						"label" : "Green Tiles",
+						"value" : "green"
+					},
+					{
+						"label" : "Orange Waves",
+						"value" : "orange"
+					},
+					{
+						"label" : "Pink Waves",
+						"value" : "pink"
+					},
+					{
+						"label" : "Yellow Zig-Zags",
+						"value" : "yellow"
+					},
+					{
+						"label" : "Shifting Gradient",
+						"value" : "gradient"
+					}
+				],
+				"order" : 104,
+				"text" : "Background",
+				"type" : "combo",
+				"value" : "none"
+			},
+			"customimage" :
+			{
+				"condition" : "forcebackground.value == \"customimage\"",
+				"index" : 5,
+				"order" : 105,
+				"text" : "Custom Image",
+				"type" : "file",
+				"fileType" : "image",
+				"value" : ""
+			},
+			"customvideo" :
+			{
+				"condition" : "forcebackground.value == \"customvideo\"",
+				"index" : 6,
+				"order" : 106,
+				"text" : "Custom Video",
+				"type" : "file",
+				"fileType" : "video",
+				"value" : ""
+			},
+			"staticbg" :
+			{
+				"condition" : "forcebackground.value != \"customimage\" && forcebackground.value != \"customvideo\"",
+				"index" : 7,
+				"order" : 107,
+				"text" : "Static Background",
+				"type" : "bool",
+				"value" : false
+			},
+			"staticbox" :
+			{
+				"index" : 8,
+				"order" : 108,
+				"text" : "Disable Verse Box Ripple",
 				"type" : "bool",
 				"value" : false
 			},
@@ -186,7 +286,7 @@
 	"tags" : [ "Relaxing" ],
 	"title" : "Bible Verse of the Day",
 	"type" : "Web",
-	"version" : 2,
+	"version" : 3,
 	"visibility" : "public",
 	"workshopid" : "3393666431",
 	"workshopurl" : "steam://url/CommunityFilePage/3393666431"

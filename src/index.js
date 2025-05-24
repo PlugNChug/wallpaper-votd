@@ -1,273 +1,241 @@
 import { grabVerse } from "./verse";
+import {
+  setBackgroundContent,
+  getBackgroundSource,
+  removeInvisibleClass,
+  addInvisibleClass,
+  containsInvisibleClass,
+  bgChooser,
+  forceBackground,
+} from "./backgroundHelper";
 import "./styles/main.scss";
-import HornPeak from "./assets/HornPeak.jpg";
-import NightSky from "./assets/NightSky.jpg";
-import BlueGradient from "./assets/BlueGradient.svg";
-import OrangeWaves from "./assets/OrangeWaves.svg";
-import GreenTiles from "./assets/GreenTiles.svg";
-import PinkWaves from "./assets/PinkWaves.svg";
-import YellowZigZags from "./assets/YellowZigZags.svg";
-import SoftGradient from "./assets/SoftGradient.svg";
 
-var intervalID = null;
+import NightSky from "./assets/NightSky.jpg";
+
+let intervalID = null;
 
 document.addEventListener("DOMContentLoaded", () => {
-  var version = "VOTD";
-  var version2 = "VOTD";
-  var _24hourtime = false;
-  var forcebackground = "none";
+  // Default settings
+  let version = "ESV";
+  let version2 = "VOTD";
+  let twentyFourHour = false;
+  let disableClock = false;
+  let forceBackgroundSetting = "none";
+  let customFile = "";
+  let staticBg = false;
+  let staticVerseBox = false;
+
+  /*  Wallpaper Engine will inject property updates through this listener. */
   window.wallpaperPropertyListener = {
-    applyUserProperties: (properties) => {
-      if (properties.bibleversion) version = properties.bibleversion.value;
-      if (properties.bibleversion2) version2 = properties.bibleversion2.value;
-      if (properties._24hourtime) _24hourtime = properties._24hourtime.value;
-      if (properties.forcebackground)
-        forcebackground = properties.forcebackground.value;
-      screen(version, version2, _24hourtime, forcebackground);
+    applyUserProperties: (props) => {
+      if (props.bibleversion) version = props.bibleversion.value;
+      if (props.bibleversion2) version2 = props.bibleversion2.value;
+      if (props._24hourtime) twentyFourHour = props._24hourtime.value;
+      if (props.disableclock) disableClock = props.disableclock.value;
+      if (props.forcebackground)
+        forceBackgroundSetting = props.forcebackground.value;
+      if (props.customimage)
+        customFile = "file:///" + props.customimage.value;
+      if (props.customvideo)
+        customFile = "file:///" + props.customvideo.value;
+      if (props.staticbg) staticBg = props.staticbg.value;
+      if (props.staticbox) staticVerseBox = props.staticbox.value;
+
+      clearInterval(intervalID);
+      initScreen();
     },
   };
 
-  // To test outside of Wallpaper Engine, uncomment the following, npm run dev
-  // screen(version, version2, _24hourtime, forcebackground);
+  // Run once outside Wallpaper Engine (e.g. during local dev)
+  // initScreen();
+
+  function initScreen() {
+    renderScreen(
+      version,
+      version2,
+      twentyFourHour,
+      disableClock,
+      forceBackgroundSetting,
+      customFile,
+      staticBg,
+      staticVerseBox,
+    );
+  }
 });
 
-function screen(version, version2, _24hourtime, forcebackground) {
+function renderScreen(
+  version,
+  version2,
+  twentyFourHour,
+  disableClock,
+  forceBackgroundSetting,
+  customFile,
+  staticBg,
+  staticVerseBox,
+) {
   const nextBG = document.getElementById("background1");
   const currBG = document.getElementById("background2");
   const overlayBG = document.getElementById("background3");
-  if (overlayBG.src === null) {
-    overlayBG.src = NightSky;
+
+  // Guarantee that the overlay has a source to avoid flashing on startup
+  if (!getBackgroundSource(overlayBG)) {
+    setBackgroundContent(overlayBG, NightSky, staticBg);
   }
 
-  if (intervalID !== null) {
-    clearInterval(intervalID);
-  }
-  setInitialBG(new Date(), currBG, nextBG, overlayBG, forcebackground);
-  grabVerse(version, version2);
-  intervalID = setInterval(
-    () =>
-      clock(
-        false,
-        currBG,
-        nextBG,
-        overlayBG,
-        version,
-        version2,
-        _24hourtime,
-        forcebackground
-      ),
-    500
+  setInitialBG(
+    new Date(),
+    currBG,
+    nextBG,
+    overlayBG,
+    forceBackgroundSetting,
+    customFile,
+    staticBg,
   );
+  grabVerse(version, version2);
+
+  intervalID = setInterval(() => {
+    tick(
+      currBG,
+      nextBG,
+      overlayBG,
+      version,
+      version2,
+      disableClock,
+      twentyFourHour,
+      forceBackgroundSetting,
+      customFile,
+      staticBg,
+      staticVerseBox,
+    );
+  }, 500);
 }
 
 /**
- * A modified version of w3schools' js clock example.
- * Calls itself every half second.
+ * Updates clock, verse (every half‑hour), and backgrounds (every tick).
  */
-function clock(
-  grabCalled,
+function tick(
   currBG,
   nextBG,
   overlayBG,
   version,
   version2,
-  _24hourtime,
-  forcebackground
+  disableClock,
+  twentyFourHour,
+  forceBackgroundSetting,
+  customFile,
+  staticBg,
+  staticVerseBox,
 ) {
-  const today = new Date();
-  let h = today.getHours();
-  let m = today.getMinutes();
-  let s = today.getSeconds();
-
-  // A little after the top/bottom of each hour (XX:00:00 or XX:30:00), refresh the verse and background.
-  // A verse change should really only happen a little after midnight
-  // Because we're calling clock() every 0.5 seconds, we have to check a flag that prevents this from being called 2x in one second
-  if (m % 30 === 0 && s === 30 && grabCalled) {
-    grabVerse(version, version2);
-    grabCalled = false;
+  // Every tick, check for user property changes
+  // Disable clock if the user requested it
+  if (disableClock) {
+    document.querySelector(".time").classList.add("invisible");
   } else {
-    grabCalled = true;
+    document.querySelector(".time").classList.remove("invisible");
   }
 
-  // Call the background switcher.
-  setBG(today, currBG, nextBG, overlayBG, forcebackground);
-
-  // Convert values to displayable format
-  if (!_24hourtime) {
-    h = h % 12 === 0 ? 12 : h % 12;
+  // Disable verse box ripple if the user requested it
+  if (staticVerseBox) {
+    // Disable the verse box
+    document.getElementById("box").classList.add("paused");
+  } else {
+    // Enable the verse box
+    document.getElementById("box").classList.remove("paused");
   }
-  m = formatTime(m);
-  document.getElementById("clock").innerHTML = h + ":" + m;
-  document.getElementById("day").innerHTML = today.getDate();
-  document.getElementById("month").innerHTML = today
+  const now = new Date();
+
+  // Refresh verse at xx:00:30 and xx:30:30
+  if (now.getSeconds() === 30 && now.getMinutes() % 30 === 0) {
+    grabVerse(version, version2);
+  }
+
+  updateClock(now, twentyFourHour);
+  updateBackground(
+    now,
+    currBG,
+    nextBG,
+    overlayBG,
+    forceBackgroundSetting,
+    customFile,
+    staticBg,
+  );
+}
+
+function updateClock(date, twentyFourHour) {
+  const hours = twentyFourHour ? date.getHours() : (date.getHours() % 12) || 12;
+  const minutes = `${date.getMinutes()}`.padStart(2, "0");
+
+  document.getElementById("clock").textContent = `${hours}:${minutes}`;
+  document.getElementById("day").textContent = date.getDate();
+  document.getElementById("month").textContent = date
     .toLocaleString("default", { month: "short" })
     .toUpperCase();
-  document.getElementById("year").innerHTML = today.getFullYear();
+  document.getElementById("year").textContent = date.getFullYear();
 }
 
 /**
- *
- * @param {Number} i
- * @returns {*} Either the inputted number or a string that consists of the number and '0' appended in front of it
+ * Switches background based on the time of day / day of week.
  */
-function formatTime(i) {
-  if (i < 10) {
-    i = "0" + i;
-  } // add zero in front of numbers < 10
-  return i;
-}
-
-/**
- * Given a date, sets the background depending on the date/time
- * @param {Date} today
- *
- */
-function setBG(today, currBG, nextBG, overlayBG, forcebackground) {
-  if (forcebackground !== "none") {
-    forceTheBackground(forcebackground);
-    overlayBG.classList.remove("invisible");
+function updateBackground(
+  date,
+  currBG,
+  nextBG,
+  overlayBG,
+  forceBackgroundSetting,
+  customFile,
+  staticBg,
+) {
+  if (forceBackgroundSetting !== "none") {
+    forceBackground(overlayBG, forceBackgroundSetting, customFile, staticBg);
+    removeInvisibleClass(overlayBG);
     return;
+  }
+
+  const hour = date.getHours();
+  const isNight = hour >= 18 || hour < 6;
+
+  if (isNight) {
+    setBackgroundContent(overlayBG, NightSky, staticBg);
+    removeInvisibleClass(overlayBG);
   } else {
-    overlayBG.classList.add("invisible");
+    addInvisibleClass(overlayBG);
   }
 
-  let d = today.getDay();
-  let h = today.getHours();
+  // Rotate daily backgrounds on the main layers
+  bgChooser(date.getDay(), nextBG, staticBg);
 
-  // The night background will override other backgrounds
-  // If the night background hasn't been activated and it's past 6pm, switch to that background
-  if ((h >= 18 || h < 6) && overlayBG.classList.contains("invisible")) {
-    overlayBG.src = NightSky;
-    overlayBG.classList.remove("invisible");
-    return;
-  } else if (h >= 18 || h < 6) {
-    overlayBG.src = NightSky;
-    return;
-  } else {
-    overlayBG.classList.add("invisible");
-  }
-
-  // Change background depending on the day. 0 = Sunday, 1 = Monday, etc.
-  // These are overridden by the night background
-  switch (d % 7) {
-    case 0:
-      nextBG.src = BlueGradient;
-      break;
-    case 1:
-      nextBG.src = OrangeWaves;
-      break;
-    case 2:
-      nextBG.src = GreenTiles;
-      break;
-    case 3:
-      nextBG.src = PinkWaves;
-      break;
-    case 4:
-      nextBG.src = YellowZigZags;
-      break;
-    case 5:
-      nextBG.src = SoftGradient;
-      break;
-    case 6:
-      nextBG.src = HornPeak;
-      break;
-    default:
-      break;
-  }
-
-  // Fade out the current background. This will reveal the next background
-  currBG.classList.add("invisible");
-  // After 5 seconds (the length of the fade-out), do some swap shenanigans
+  // Fade out current, then swap sources after transition
+  addInvisibleClass(currBG);
   setTimeout(() => {
-    // Swap the current background to be the next background
-    currBG.src = nextBG.src;
-
-    currBG.classList.remove("invisible");
+    setBackgroundContent(currBG, getBackgroundSource(nextBG), staticBg);
+    removeInvisibleClass(currBG);
   }, 5000);
 }
 
 /**
- * Given a date, sets the background and next background depending on the date/time
- * @param {Date} today
- *
+ * Sets initial backgrounds on startup.
  */
-function setInitialBG(today, currBG, nextBG, overlayBG, forcebackground) {
-  if (forcebackground !== "none") {
-    forceTheBackground(overlayBG, forcebackground);
-    overlayBG.classList.remove("invisible");
-    return;
-  } else {
-    overlayBG.classList.add("invisible");
-  }
-
-  let d = today.getDay();
-  let h = today.getHours();
-
-  // The night background will override other backgrounds
-  // If the night background hasn't been activated and it's past 6pm, switch to that background
-  if (h >= 18 || h < 6) {
-    overlayBG.src = NightSky;
-    overlayBG.classList.remove("invisible");
+function setInitialBG(
+  date,
+  currBG,
+  nextBG,
+  overlayBG,
+  forceBackgroundSetting,
+  customFile,
+  staticBg,
+) {
+  if (forceBackgroundSetting !== "none") {
+    forceBackground(overlayBG, forceBackgroundSetting, customFile, staticBg);
+    removeInvisibleClass(overlayBG);
     return;
   }
 
-  // Initialize backgrounds depending on the day
-  // These are overridden by the night background
-  switch (d % 7) {
-    case 0:
-      currBG.src = BlueGradient;
-      break;
-    case 1:
-      currBG.src = OrangeWaves;
-      break;
-    case 2:
-      currBG.src = GreenTiles;
-      break;
-    case 3:
-      currBG.src = PinkWaves;
-      break;
-    case 4:
-      currBG.src = YellowZigZags;
-      break;
-    case 5:
-      currBG.src = SoftGradient;
-      break;
-    case 6:
-      currBG.src = HornPeak;
-      break;
-    default:
-      break;
+  const hour = date.getHours();
+  const isNight = hour >= 18 || hour < 6;
+  if (isNight) {
+    setBackgroundContent(overlayBG, NightSky, staticBg);
+    removeInvisibleClass(overlayBG);
   }
-}
 
-function forceTheBackground(overlayBG, forcebackground) {
-  switch (forcebackground) {
-    case "night":
-      overlayBG.src = NightSky;
-      break;
-    case "mountain":
-      overlayBG.src = HornPeak;
-      break;
-    case "blue":
-      overlayBG.src = BlueGradient;
-      break;
-    case "green":
-      overlayBG.src = GreenTiles;
-      break;
-    case "orange":
-      overlayBG.src = OrangeWaves;
-      break;
-    case "pink":
-      overlayBG.src = PinkWaves;
-      break;
-    case "yellow":
-      overlayBG.src = YellowZigZags;
-      break;
-    case "gradient":
-      overlayBG.src = SoftGradient;
-      break;
-    default:
-      overlayBG.src = NightSky;
-      break;
-  }
+  bgChooser(date.getDay(), currBG, staticBg);
 }

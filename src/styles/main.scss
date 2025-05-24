@@ -223,4 +223,9 @@ body {
   &::after {
     @include rings(10s, 0s);
   }
+
+  /* When JS adds .paused, freeze the pseudo-element */
+  &.paused::after {
+    animation: none !important;   // could also do: animation-play-state: paused;
+  }
 }

@@ -2,6 +2,7 @@ const axios = require("axios");
 import defaultVerse from "./defaultVerse";
 import { bookIDs, bookCodes } from "../bookIDs";
 import { grabVerseAgain } from "../verse";
+import dataParser from "./helperFunctions";
 
 async function helloaoFetch(translation, translation2, triedAgain = false) {
   try {
@@ -11,27 +12,7 @@ async function helloaoFetch(translation, translation2, triedAgain = false) {
       }
 
       // Obtain the link from the received data, then get the last portion of the link to obtain a preliminary string to parse further
-      const link = res.data[0];
-      const parseableString = link.split("/")[link.split("/").length - 1];
-  
-      // Get the first item in the further split parseableString to obtain the string for book and chapter
-      const locationString = parseableString.split(".")[0];
-
-      var book = "NULL";
-      var chapterString = "NULL";
-      var strIndex = 1;
-      while (!isNaN(locationString.substring(locationString.length - 1 - strIndex))) {
-        strIndex++;
-      }
-      book = locationString.substring(0, locationString.length - strIndex);
-      chapterString = locationString.substring(locationString.length - strIndex);
-
-
-      // Get the second item in the further split parseableString to obtain a verse number range.
-      // This range can either be a single verse or an actual range of verses.
-      // String representations of numbers will be converted to actual numbers.
-      const verseString = parseableString.split(".")[1];
-      const verseRange = verseString.split("-").map(Number);
+      const [book, chapterString, verseRange, verseString] = dataParser(res.data[0]);
 
       if (translation === "GREEK") {
         if (bookIDs[book] < 40) {
