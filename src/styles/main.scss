@@ -75,6 +75,21 @@ body {
   overflow: hidden;
 }
 
+/* Pause CSS animations while the wallpaper is hidden (sleep / not visible) */
+body.wallpaper-paused {
+  .sway-bg {
+    animation-play-state: paused !important;
+  }
+
+  .container::after {
+    animation-play-state: paused !important;
+  }
+
+  .transition {
+    transition: none !important;
+  }
+}
+
 .background {
   position: absolute;
   top: 50%;
@@ -125,17 +140,79 @@ body {
 .time {
   display: flex;
   position: absolute;
-  top: 0;
-  right: 2vw;
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
   flex-direction: column;
   margin: 0;
-  padding: 0;
+  padding: 1vw 2vw;
   color: $secondary-color;
   font-weight: bolder;
   font-family: "Outfit", Helvetica, sans-serif;
   font-variant-numeric: tabular-nums lining-nums;
-  text-align: right;
   text-shadow: 1px 1px 2px black;
+  transform: none;
+}
+
+.time-topleft {
+  top: 0;
+  left: 0;
+  text-align: left;
+  align-items: flex-start;
+}
+
+.time-middleleft {
+  top: 50%;
+  left: 0;
+  text-align: left;
+  align-items: flex-start;
+  transform: translateY(-50%);
+}
+
+.time-bottomleft {
+  bottom: 3.5em;
+  left: 0;
+  text-align: left;
+  align-items: flex-start;
+}
+
+.time-topcenter {
+  top: 0;
+  left: 50%;
+  text-align: center;
+  align-items: center;
+  transform: translateX(-50%);
+}
+
+.time-bottomcenter {
+  bottom: 3.5em;
+  left: 50%;
+  text-align: center;
+  align-items: center;
+  transform: translateX(-50%);
+}
+
+.time-topright {
+  top: 0;
+  right: 0;
+  text-align: right;
+  align-items: flex-end;
+}
+
+.time-middleright {
+  top: 50%;
+  right: 0;
+  text-align: right;
+  align-items: flex-end;
+  transform: translateY(-50%);
+}
+
+.time-bottomright {
+  bottom: 3.5em;
+  right: 0;
+  text-align: right;
+  align-items: flex-end;
 }
 
 .clock {
@@ -147,7 +224,7 @@ body {
 .date {
   display: grid;
   grid-template-rows: 1fr 1fr;
-  grid-template-columns: fr 1fr;
+  grid-template-columns: auto auto;
   grid-template-areas:
     "Month Day"
     "Month Year";
@@ -226,6 +303,15 @@ body {
 
   /* When JS adds .paused, freeze the pseudo-element */
   &.paused::after {
-    animation: none !important;   // could also do: animation-play-state: paused;
+    animation: none !important;
+  }
+
+  &.nobox {
+    border: none;
+    padding: 0;
+
+    &::after {
+      display: none;
+    }
   }
 }

@@ -1,15 +1,26 @@
-function defaultVerse() {
-  document.getElementById("load").classList.add("invisible");
-  document.getElementById("verse").innerHTML =
-    "Trust in the Lord with all your heart, and do not lean on your own understanding. In all your ways acknowledge him, and he will make straight your paths.";
-  document.getElementById("source").innerHTML = "Proverbs 3:5-6";
+import { displayVerse, loadVerseCache } from "./fetchUtils";
 
-  setTimeout(() => {
-    document.getElementById("verse").classList.add("textfade");
-    document.getElementById("source").classList.add("textfade");
-    document.getElementById("verse").classList.remove("invisible");
-    document.getElementById("source").classList.remove("invisible");
-  }, 1250);
+function defaultVerse(gen, preferredTranslation) {
+  const cache = loadVerseCache();
+  if (
+    cache?.text &&
+    cache?.source &&
+    (!preferredTranslation || cache.translation === preferredTranslation)
+  ) {
+    displayVerse(cache.text, cache.source, {
+      fade: false,
+      cache: false,
+      gen,
+      translation: cache.translation,
+    });
+    return;
+  }
+
+  displayVerse(
+    "Trust in the Lord with all your heart, and do not lean on your own understanding. In all your ways acknowledge him, and he will make straight your paths.",
+    "Proverbs 3:5-6",
+    { fade: true, cache: false, gen },
+  );
 }
 
 export default defaultVerse;

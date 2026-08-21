@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const { mergeProjectJson } = require('./scripts/merge-project-json');
 
 module.exports = {
     mode: 'development',
@@ -48,8 +49,14 @@ module.exports = {
         }),
         new CopyWebpackPlugin({
             patterns: [
-                { from: 'src/project.json', to: 'project.json' },
+                {
+                    from: 'src/project.json',
+                    to: 'project.json',
+                    transform() {
+                        return mergeProjectJson();
+                    },
+                },
             ],
         }),
     ]
-}
+};

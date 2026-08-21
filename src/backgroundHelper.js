@@ -135,23 +135,29 @@ function createBackgroundElement(src, staticbg) {
 /**
  * Ensures that the background inside `container` matches the requested `src`
  * and that it immediately honours the `staticbg` flag (freeze/unfreeze).
+ * Pass `{ force: true }` to recreate the element even when `src` is unchanged
+ * (needed after sleep when SVG <object> / media layers stop painting).
  */
-export function setBackgroundContent(container, src, staticbg) {
+export function setBackgroundContent(container, src, staticbg, { force = false } = {}) {
   // Update existing element’s static/animated state
-  reconcileStaticMode(container.firstElementChild, staticbg);
+  if (!force) {
+    reconcileStaticMode(container.firstElementChild, staticbg);
+  }
 
-  // Swap element only if the asset actually changes
-  if (getBackgroundSource(container) === src) return;
+  // Swap element only if the asset actually changes (unless forcing remount)
+  if (!force && getBackgroundSource(container) === src) return;
 
   container.innerHTML = "";
-  container.appendChild(createBackgroundElement(src, staticbg));
+  if (src) {
+    container.appendChild(createBackgroundElement(src, staticbg));
+  }
 }
 
 export function bgChooser(day, container, staticbg) {
   setBackgroundContent(container, DAILY_BACKGROUNDS[day % 7], staticbg);
 }
 
-export function forceBackground(container, key, custom, staticbg) {
+export function forceBackground(container, key, custom, staticbg, opts = {}) {
   const src = (key === "customimage" || key === "customvideo") ? custom : FORCE_MAP[key] || NightSky;
-  setBackgroundContent(container, src, staticbg);
+  setBackgroundContent(container, src, staticbg, opts);
 }

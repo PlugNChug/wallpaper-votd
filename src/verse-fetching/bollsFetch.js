@@ -2,94 +2,116 @@ const axios = require("axios");
 import defaultVerse from "./defaultVerse";
 import { bookIDs } from "../bookIDs";
 import dataParser from "./helperFunctions";
+import {
+  AXIOS_TIMEOUT,
+  beginVerseFetch,
+  displayVerse,
+  fetchWithTimeout,
+  isVerseFetchCurrent,
+  showCachedVerseIfAny,
+} from "./fetchUtils";
+import {
+  bollsPsalmCandidates,
+  extractBollsVerseText,
+} from "./psalmMap";
 
-async function bollsFetch(translation, triedAgain = false) {
+function cleanBollsText(output) {
+  output = output.replace(/<S>.*?<\/S>|<sup>.*?<\/sup>|<b>.*?<\/b>/g, "");
+  output = output.replace(/<\/?i>/g, "");
+  output = output.replace(/ [^\p{L}\p{N}\s.,!?'"(){}[\]:;]/gu, "");
+  return output;
+}
+
+async function bollsFetch(translation, triedAgain = false, gen = null) {
+  if (gen == null) {
+    gen = beginVerseFetch();
+    showCachedVerseIfAny(translation);
+  }
+
   try {
-    await axios.get("https://votd-grabber.onrender.com/scrape").then((res) => {
-      if (res.status !== 200) {
-        throw new Error("Non-200 status.");
+    const res = await axios.get("https://votd-grabber.onrender.com/scrape", {
+      timeout: AXIOS_TIMEOUT,
+    });
+
+    if (!isVerseFetchCurrent(gen)) return;
+
+    if (res.status !== 200) {
+      throw new Error("Non-200 status.");
+    }
+
+    const [book, chapterString, verseRange, verseString] = dataParser(
+      res.data[0],
+    );
+
+    const bookId = bookIDs[book];
+    if (bookId == null) {
+      throw new Error(`Unknown book: ${book}`);
+    }
+
+    const candidates = bollsPsalmCandidates(
+      translation,
+      book,
+      chapterString,
+      verseRange,
+    );
+
+    let output = null;
+
+    let lastErr = null;
+    for (const candidate of candidates) {
+      try {
+        const chapterRes = await fetchWithTimeout(
+          `https://bolls.life/get-text/${translation}/${bookId}/${candidate.chapterString}/`,
+        );
+        if (!isVerseFetchCurrent(gen)) return;
+        if (!chapterRes.ok) {
+          throw new Error(`Chapter fetch ${chapterRes.status}`);
+        }
+
+        const chapter = await chapterRes.json();
+        if (!isVerseFetchCurrent(gen)) return;
+
+        output = cleanBollsText(
+          extractBollsVerseText(chapter, candidate.verseRange),
+        );
+        break;
+      } catch (err) {
+        lastErr = err;
       }
+    }
 
-      // Obtain the link from the received data, then get the last portion of the link to obtain a preliminary string to parse further
-      const [book, chapterString, verseRange, verseString] = dataParser(res.data[0]);
-      
-      // Fetch from Bolls Bible API.
-      fetch(
-        `https://bolls.life/get-text/${translation}/${bookIDs[book]}/${chapterString}/`
-      )
-        .then((request) => request.json())
-        .then((chapter) => {
-          // The string we're gonna output in the end.
-          var output = "";
+    if (output == null) {
+      throw lastErr || new Error("Verse not found after Psalm remap attempts");
+    }
 
-          // Account for either a single verse or a verse range.
-          // Add the targeted verse's text to the output.
-          if (verseRange.length === 1) {
-            output += chapter.filter((item) => item.verse === verseRange[0])[0]
-              .text;
-          } else {
-            for (let i = verseRange[0]; i <= verseRange[1]; i++) {
-              output +=
-                chapter.filter((item) => item.verse === i)[0].text + " ";
-            }
-            output = output.substring(0, output.length - 1);
-          }
+    const booksRes = await fetchWithTimeout(
+      `https://bolls.life/get-books/${translation}/`,
+    );
+    if (!isVerseFetchCurrent(gen)) return;
+    if (!booksRes.ok) throw new Error(`Books fetch ${booksRes.status}`);
 
-          // Get rid of Strong's Numbers (only for some versions), Superscripts (for notes), and Bold text (for titles)
-          output = output.replace(
-            /<S>.*?<\/S>|<sup>.*?<\/sup>|<b>.*?<\/b>/g,
-            ""
-          );
+    const version = await booksRes.json();
+    if (!isVerseFetchCurrent(gen)) return;
 
-          // Remove italics tags, but don't remove the contents
-          output = output.replace(/<\/?i>/g, "");
+    const bookMeta = version.find((item) => item.bookid === bookId);
+    const bookName = bookMeta?.name || book;
 
-          // Remove unpaired quotes
-            // if (output.split("'").length - 1 === 1) {
-            //   output = output.replace("'", "");
-            // }
-            // if (output.split("\"").length - 1 === 1) {
-            //   output = output.replace("\"", "");
-            // }
-
-          // Remove weird symbols, etc.
-          output = output.replace(/ [^\p{L}\p{N}\s.,!?'"(){}[\]:;]/gu, "");
-
-          // Fetch the book title (may change depending on language)
-          fetch(`https://bolls.life/get-books/${translation}/`)
-            .then((request) => request.json())
-            .then((version) => {
-              var bookName = version.filter(
-                (item) => item.bookid === bookIDs[book]
-              )[0].name;
-
-              // Set the corresponding elements to the loaded verse and chapter.
-              document.getElementById("verse").innerHTML = output;
-              document.getElementById(
-                "source"
-              ).innerHTML = `${bookName} ${chapterString}:${verseString}`;
-
-              // Then, set the visibility of elements.
-              document.getElementById("load").classList.add("invisible");
-              setTimeout(() => {
-                document.getElementById("verse").classList.add("textfade");
-                document.getElementById("source").classList.add("textfade");
-                document.getElementById("verse").classList.remove("invisible");
-                document.getElementById("source").classList.remove("invisible");
-              }, 1250);
-            });
-        });
+    // Keep the familiar Protestant reference in the citation when we remapped
+    // internally, so the label still matches VOTD (e.g. Psalm 42:8).
+    displayVerse(output, `${bookName} ${chapterString}:${verseString}`, {
+      gen,
+      translation,
     });
   } catch (error) {
-    // If some error happened (like no connection), try again in 15 seconds.
-    // If we already tried again, abort and do the default verse: Proverbs 3:5-6
+    if (!isVerseFetchCurrent(gen)) return;
+
     if (!triedAgain) {
       setTimeout(() => {
-        bollsFetch(translation, true);
+        bollsFetch(translation, true, gen);
       }, 15000);
     } else {
       console.error("Verse fetch failed, showing default verse. - ", error);
-      defaultVerse();
+      defaultVerse(gen, translation);
     }
   }
 }

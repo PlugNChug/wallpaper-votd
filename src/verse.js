@@ -3,6 +3,33 @@ import defaultVerse from "./verse-fetching/defaultVerse";
 import bollsFetch from "./verse-fetching/bollsFetch";
 import helloaoFetch from "./verse-fetching/helloaoFetch";
 import dataParser from "./verse-fetching/helperFunctions";
+import {
+  AXIOS_TIMEOUT,
+  beginVerseFetch,
+  displayVerse,
+  isVerseFetchCurrent,
+  showCachedVerseIfAny,
+} from "./verse-fetching/fetchUtils";
+
+/**
+ * Still only on helloao (no matching Bolls edition):
+ * - fra_sbl — French SBL
+ * - GREEK — SBL Greek NT (grc_sbl1); Bolls has TISCH/TR/LXX instead
+ *
+ * Now on Bolls (migrated off helloao):
+ * - eng_asv → ASV
+ * - BSB → BSB
+ */
+const HELLOAO_ONLY = new Set(["fra_sbl", "GREEK"]);
+
+/** Map legacy / UI ids onto Bolls short_name values. */
+const BOLLS_IDS = {
+  eng_asv: "ASV",
+};
+
+function resolveBollsId(translation) {
+  return BOLLS_IDS[translation] || translation;
+}
 
 export async function grabVerse(translation, translation2) {
   if (translation === "VOTD") {
@@ -10,10 +37,10 @@ export async function grabVerse(translation, translation2) {
     return;
   }
 
-  if (["eng_asv", "BSB", "fra_sbl", "GREEK"].includes(translation)) {
+  if (HELLOAO_ONLY.has(translation)) {
     helloaoFetch(translation, translation2);
   } else {
-    bollsFetch(translation);
+    bollsFetch(resolveBollsId(translation));
   }
 }
 
@@ -23,50 +50,49 @@ export async function grabVerseAgain(translation) {
     return;
   }
 
-  if (["eng_asv", "BSB", "fra_sbl"].includes(translation)) {
+  if (HELLOAO_ONLY.has(translation)) {
     helloaoFetch(translation, translation);
   } else {
-    bollsFetch(translation);
+    bollsFetch(resolveBollsId(translation));
   }
 }
 
-async function votd(translation, triedAgain = false) {
-  try {
-    await axios.get("https://votd-grabber.onrender.com/scrape").then((res) => {
-      // If no connection, or some sort of error occurred when connecting, abort and do the default verse: Proverbs 3:5-6
-      if (res.status !== 200) {
-        defaultVerse();
-        return;
-      }
-  
-      // Obtain the link from the received data, then get the last portion of the link to obtain a preliminary string to parse further
-      const [book, chapterString, verseRange, verseString] = dataParser(res.data[0]);
+async function votd(translation, triedAgain = false, gen = null) {
+  if (gen == null) {
+    gen = beginVerseFetch();
+    showCachedVerseIfAny(translation);
+  }
 
-      if (book === "Song") book = "Song of Solomon";
-  
-      // Set the corresponding elements to the loaded verse and chapter.
-      document.getElementById("verse").innerHTML = res.data[1];
-      document.getElementById(
-        "source"
-      ).innerHTML = `${book} ${chapterString}:${verseString}`;
-  
-      // Then, set the visibility of elements.
-      document.getElementById("load").classList.add("invisible");
-      setTimeout(() => {
-        document.getElementById("verse").classList.add("textfade");
-        document.getElementById("source").classList.add("textfade");
-        document.getElementById("verse").classList.remove("invisible");
-        document.getElementById("source").classList.remove("invisible");
-      }, 1250);
+  try {
+    const res = await axios.get("https://votd-grabber.onrender.com/scrape", {
+      timeout: AXIOS_TIMEOUT,
+    });
+
+    if (!isVerseFetchCurrent(gen)) return;
+
+    if (res.status !== 200) {
+      defaultVerse(gen, translation);
+      return;
+    }
+
+    let [book, chapterString, , verseString] = dataParser(res.data[0]);
+
+    if (book === "Song") book = "Song of Solomon";
+
+    displayVerse(res.data[1], `${book} ${chapterString}:${verseString}`, {
+      gen,
+      translation,
     });
   } catch (error) {
+    if (!isVerseFetchCurrent(gen)) return;
+
     if (!triedAgain) {
       setTimeout(() => {
-        votd(translation, true);
+        votd(translation, true, gen);
       }, 15000);
     } else {
       console.error("Verse fetch failed, showing default verse. - ", error);
-      defaultVerse();
+      defaultVerse(gen, translation);
     }
   }
 }

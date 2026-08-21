@@ -10,17 +10,123 @@
 			{
 				"index" : 3,
 				"order" : 102,
-				"text" : "24 Hour Time",
+				"text" : "ui_24hourtime",
 				"type" : "bool",
 				"value" : false
 			},
-			"disableclock" : 
+			"monthlocale" :
+			{
+				"index" : 9,
+				"options" :
+				[
+					{
+						"label" : "ui_month_en",
+						"value" : "en-US"
+					},
+					{
+						"label" : "ui_month_de",
+						"value" : "de-DE"
+					},
+					{
+						"label" : "ui_month_es",
+						"value" : "es-ES"
+					},
+					{
+						"label" : "ui_month_fr",
+						"value" : "fr-FR"
+					},
+					{
+						"label" : "ui_month_pt",
+						"value" : "pt-BR"
+					},
+					{
+						"label" : "ui_month_zh",
+						"value" : "zh-CN"
+					},
+					{
+						"label" : "ui_month_ru",
+						"value" : "ru-RU"
+					},
+					{
+						"label" : "ui_month_ko",
+						"value" : "ko-KR"
+					},
+					{
+						"label" : "ui_month_ja",
+						"value" : "ja-JP"
+					},
+					{
+						"label" : "ui_month_nl",
+						"value" : "nl-NL"
+					},
+					{
+						"label" : "ui_month_pl",
+						"value" : "pl-PL"
+					},
+					{
+						"label" : "ui_month_it",
+						"value" : "it-IT"
+					},
+					{
+						"label" : "ui_month_id",
+						"value" : "id-ID"
+					},
+					{
+						"label" : "ui_month_el",
+						"value" : "el-GR"
+					}
+				],
+				"order" : 109,
+				"text" : "ui_monthlocale",
+				"type" : "combo",
+				"value" : "en-US"
+			},
+			"clockposition" : 
 			{
 				"index" : 2,
+				"options" : 
+				[
+					{
+						"label" : "ui_clock_hidden",
+						"value" : "hidden"
+					},
+					{
+						"label" : "ui_clock_topleft",
+						"value" : "topleft"
+					},
+					{
+						"label" : "ui_clock_middleleft",
+						"value" : "middleleft"
+					},
+					{
+						"label" : "ui_clock_bottomleft",
+						"value" : "bottomleft"
+					},
+					{
+						"label" : "ui_clock_topcenter",
+						"value" : "topcenter"
+					},
+					{
+						"label" : "ui_clock_bottomcenter",
+						"value" : "bottomcenter"
+					},
+					{
+						"label" : "ui_clock_topright",
+						"value" : "topright"
+					},
+					{
+						"label" : "ui_clock_middleright",
+						"value" : "middleright"
+					},
+					{
+						"label" : "ui_clock_bottomright",
+						"value" : "bottomright"
+					}
+				],
 				"order" : 103,
-				"text" : "Disable Date/Time",
-				"type" : "bool",
-				"value" : false
+				"text" : "ui_clockposition",
+				"type" : "combo",
+				"value" : "topright"
 			},
 			"forcebackground" : 
 			{
@@ -28,52 +134,52 @@
 				"options" : 
 				[
 					{
-						"label" : "Default Cycle",
+						"label" : "ui_bg_none",
 						"value" : "none"
 					},
 					{
-						"label" : "Custom Image",
+						"label" : "ui_bg_customimage",
 						"value" : "customimage"
 					},
 					{
-						"label" : "Custom Video",
+						"label" : "ui_bg_customvideo",
 						"value" : "customvideo"
 					},
 					{
-						"label" : "Night Sky",
+						"label" : "ui_bg_night",
 						"value" : "night"
 					},
 					{
-						"label" : "Mountains",
+						"label" : "ui_bg_mountain",
 						"value" : "mountain"
 					},
 					{
-						"label" : "Blue Triangles",
+						"label" : "ui_bg_blue",
 						"value" : "blue"
 					},
 					{
-						"label" : "Green Tiles",
+						"label" : "ui_bg_green",
 						"value" : "green"
 					},
 					{
-						"label" : "Orange Waves",
+						"label" : "ui_bg_orange",
 						"value" : "orange"
 					},
 					{
-						"label" : "Pink Waves",
+						"label" : "ui_bg_pink",
 						"value" : "pink"
 					},
 					{
-						"label" : "Yellow Zig-Zags",
+						"label" : "ui_bg_yellow",
 						"value" : "yellow"
 					},
 					{
-						"label" : "Shifting Gradient",
+						"label" : "ui_bg_gradient",
 						"value" : "gradient"
 					}
 				],
 				"order" : 104,
-				"text" : "Background",
+				"text" : "ui_forcebackground",
 				"type" : "combo",
 				"value" : "none"
 			},
@@ -82,7 +188,7 @@
 				"condition" : "forcebackground.value == \"customimage\"",
 				"index" : 5,
 				"order" : 105,
-				"text" : "Custom Image",
+				"text" : "ui_customimage",
 				"type" : "file",
 				"fileType" : "image",
 				"value" : ""
@@ -92,7 +198,7 @@
 				"condition" : "forcebackground.value == \"customvideo\"",
 				"index" : 6,
 				"order" : 106,
-				"text" : "Custom Video",
+				"text" : "ui_customvideo",
 				"type" : "file",
 				"fileType" : "video",
 				"value" : ""
@@ -102,17 +208,32 @@
 				"condition" : "forcebackground.value != \"customimage\" && forcebackground.value != \"customvideo\"",
 				"index" : 7,
 				"order" : 107,
-				"text" : "Static Background",
+				"text" : "ui_staticbg",
 				"type" : "bool",
 				"value" : false
 			},
-			"staticbox" :
+			"versebox" :
 			{
 				"index" : 8,
+				"options" :
+				[
+					{
+						"label" : "ui_versebox_ripple",
+						"value" : "ripple"
+					},
+					{
+						"label" : "ui_versebox_noripple",
+						"value" : "noripple"
+					},
+					{
+						"label" : "ui_versebox_nobox",
+						"value" : "nobox"
+					}
+				],
 				"order" : 108,
-				"text" : "Disable Verse Box Ripple",
-				"type" : "bool",
-				"value" : false
+				"text" : "ui_versebox",
+				"type" : "combo",
+				"value" : "ripple"
 			},
 			"bibleversion" : 
 			{
@@ -120,12 +241,12 @@
 				"options" : 
 				[
 					{
-						"label" : "VOTD Format",
+						"label" : "ui_votd",
 						"value" : "VOTD"
 					},
 					{
 						"label" : "en-ASV",
-						"value" : "eng_asv"
+						"value" : "ASV"
 					},
 					{
 						"label" : "en-BSB",
@@ -184,12 +305,60 @@
 						"value" : "fra_sbl"
 					},
 					{
-						"label" : "el-SBL (Greek NT)",
+						"label" : "de-LUT",
+						"value" : "LUT"
+					},
+					{
+						"label" : "de-S00",
+						"value" : "S00"
+					},
+					{
+						"label" : "pt-ARA",
+						"value" : "ARA"
+					},
+					{
+						"label" : "zh-CUV",
+						"value" : "CUV"
+					},
+					{
+						"label" : "ru-SYNOD",
+						"value" : "SYNOD"
+					},
+					{
+						"label" : "ko-KRV",
+						"value" : "KRV"
+					},
+					{
+						"label" : "ja-NJB",
+						"value" : "NJB"
+					},
+					{
+						"label" : "nl-HSV",
+						"value" : "HSV17"
+					},
+					{
+						"label" : "pl-BW",
+						"value" : "BW"
+					},
+					{
+						"label" : "it-NR06",
+						"value" : "NR06"
+					},
+					{
+						"label" : "id-TB",
+						"value" : "TB"
+					},
+					{
+						"label" : "ui_ver_greek_nt",
 						"value" : "GREEK"
+					},
+					{
+						"label" : "el-LXX",
+						"value" : "LXX"
 					}
 				],
 				"order" : 100,
-				"text" : "Bible Version",
+				"text" : "ui_bibleversion",
 				"type" : "combo",
 				"value" : "KJV"
 			},
@@ -200,12 +369,12 @@
 				"options" : 
 				[
 					{
-						"label" : "VOTD Format",
+						"label" : "ui_votd",
 						"value" : "VOTD"
 					},
 					{
 						"label" : "en-ASV",
-						"value" : "eng_asv"
+						"value" : "ASV"
 					},
 					{
 						"label" : "en-BSB",
@@ -262,10 +431,58 @@
 					{
 						"label" : "fr-SBL",
 						"value" : "fra_sbl"
+					},
+					{
+						"label" : "de-LUT",
+						"value" : "LUT"
+					},
+					{
+						"label" : "de-S00",
+						"value" : "S00"
+					},
+					{
+						"label" : "pt-ARA",
+						"value" : "ARA"
+					},
+					{
+						"label" : "zh-CUV",
+						"value" : "CUV"
+					},
+					{
+						"label" : "ru-SYNOD",
+						"value" : "SYNOD"
+					},
+					{
+						"label" : "ko-KRV",
+						"value" : "KRV"
+					},
+					{
+						"label" : "ja-NJB",
+						"value" : "NJB"
+					},
+					{
+						"label" : "nl-HSV",
+						"value" : "HSV17"
+					},
+					{
+						"label" : "pl-BW",
+						"value" : "BW"
+					},
+					{
+						"label" : "it-NR06",
+						"value" : "NR06"
+					},
+					{
+						"label" : "id-TB",
+						"value" : "TB"
+					},
+					{
+						"label" : "el-LXX",
+						"value" : "LXX"
 					}
 				],
 				"order" : 101,
-				"text" : "Secondary Bible Version",
+				"text" : "ui_bibleversion2",
 				"type" : "combo",
 				"value" : "KJV"
 			},
@@ -286,7 +503,7 @@
 	"tags" : [ "Relaxing" ],
 	"title" : "Bible Verse of the Day",
 	"type" : "Web",
-	"version" : 3,
+	"version" : 4,
 	"visibility" : "public",
 	"workshopid" : "3393666431",
 	"workshopurl" : "steam://url/CommunityFilePage/3393666431"

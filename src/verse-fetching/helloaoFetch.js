@@ -3,96 +3,107 @@ import defaultVerse from "./defaultVerse";
 import { bookIDs, bookCodes } from "../bookIDs";
 import { grabVerseAgain } from "../verse";
 import dataParser from "./helperFunctions";
+import {
+  AXIOS_TIMEOUT,
+  beginVerseFetch,
+  displayVerse,
+  fetchWithTimeout,
+  isVerseFetchCurrent,
+  showCachedVerseIfAny,
+} from "./fetchUtils";
 
-async function helloaoFetch(translation, translation2, triedAgain = false) {
+async function helloaoFetch(
+  translation,
+  translation2,
+  triedAgain = false,
+  gen = null,
+) {
+  if (gen == null) {
+    gen = beginVerseFetch();
+    showCachedVerseIfAny(translation);
+  }
+
   try {
-    await axios.get("https://votd-grabber.onrender.com/scrape").then((res) => {
-      if (res.status !== 200) {
-        throw new Error("Non-200 status.");
+    const res = await axios.get("https://votd-grabber.onrender.com/scrape", {
+      timeout: AXIOS_TIMEOUT,
+    });
+
+    if (!isVerseFetchCurrent(gen)) return;
+
+    if (res.status !== 200) {
+      throw new Error("Non-200 status.");
+    }
+
+    const [book, chapterString, verseRange, verseString] = dataParser(
+      res.data[0],
+    );
+
+    let apiTranslation = translation;
+    if (translation === "GREEK") {
+      if (bookIDs[book] < 40) {
+        grabVerseAgain(translation2);
+        return;
       }
+      apiTranslation = "grc_sbl1";
+    }
 
-      // Obtain the link from the received data, then get the last portion of the link to obtain a preliminary string to parse further
-      const [book, chapterString, verseRange, verseString] = dataParser(res.data[0]);
+    const chapterRes = await fetchWithTimeout(
+      `https://bible.helloao.org/api/${apiTranslation}/${bookCodes[book]}/${chapterString}.json`,
+    );
+    if (!isVerseFetchCurrent(gen)) return;
+    if (!chapterRes.ok) throw new Error(`Chapter fetch ${chapterRes.status}`);
 
-      if (translation === "GREEK") {
-        if (bookIDs[book] < 40) {
-          grabVerseAgain(translation2);
-          return;
-        } else {
-          translation = "grc_sbl1";
-        }
+    const chapter = await chapterRes.json();
+    if (!isVerseFetchCurrent(gen)) return;
+
+    let output = "";
+    const contents = chapter.chapter.content;
+
+    const verseText = (n) =>
+      contents
+        .filter((item) => item.type === "verse" && item.number === n)
+        .map((verse) => ({
+          verse: verse.content
+            .map((part) => (typeof part === "string" ? part : part.text || ""))
+            .join(" "),
+        }))[0].verse;
+
+    if (verseRange.length === 1) {
+      output += verseText(verseRange[0]);
+    } else {
+      for (let i = verseRange[0]; i <= verseRange[1]; i++) {
+        output += verseText(i) + " ";
       }
-      
-      // Fetch from Free Use Bible API. This option is better for ASV (since Bolls Bible API doesn't have ASV) and BSB (No intro blurbs in Psalms)
-      fetch(`https://bible.helloao.org/api/${translation}/${bookCodes[book]}/${chapterString}.json`)
-      .then(request => request.json())
-      .then(chapter => {
-        // The string we're gonna output in the end.
-        var output = "";
+      output = output.substring(0, output.length - 1);
+    }
 
+    const booksRes = await fetchWithTimeout(
+      `https://bible.helloao.org/api/${apiTranslation}/books.json`,
+    );
+    if (!isVerseFetchCurrent(gen)) return;
+    if (!booksRes.ok) throw new Error(`Books fetch ${booksRes.status}`);
 
-        // What we're looking for is a bit nested within the JSON...
-        var contents = chapter.chapter.content;
-        
-        // Account for either a single verse or a verse range.
-        // Add the targeted verse's text to the output. The text itself is also pretty nested in the data...
-        if (verseRange.length === 1) {
-          output += contents
-          .filter(item => item.type === "verse" && item.number === verseRange[0])
-          .map(verse => ({
-              verse: verse.content
-                  .map(part => (typeof part === "string" ? part : part.text || ""))
-                  .join(" ")
-          }))[0].verse;
-        } else {
-          for (let i = verseRange[0]; i <= verseRange[1]; i++) {
-            output += contents
-            .filter(item => item.type === "verse" && item.number === i)
-            .map(verse => ({
-                verse: verse.content
-                    .map(part => (typeof part === "string" ? part : part.text || ""))
-                    .join(" ")
-            }))[0].verse + " ";
-          }
-          output = output.substring(0, output.length - 1);
-        }
-        // console.log(output);
-  
-        // Fetch the book title (may change depending on language)
-        fetch(`https://bible.helloao.org/api/${translation}/books.json`)
-        .then((request) => request.json())
-        .then((version) => {
-          var bookName = version.books.filter(
-            (item) => item.id === bookCodes[book]
-          )[0].commonName;
+    const version = await booksRes.json();
+    if (!isVerseFetchCurrent(gen)) return;
 
-          // Set the corresponding elements to the loaded verse and chapter.
-          document.getElementById("verse").innerHTML = output;
-          document.getElementById(
-            "source"
-          ).innerHTML = `${bookName} ${chapterString}:${verseString}`;
+    const bookName = version.books.filter(
+      (item) => item.id === bookCodes[book],
+    )[0].commonName;
 
-          // Then, set the visibility of elements.
-          document.getElementById("load").classList.add("invisible");
-          setTimeout(() => {
-            document.getElementById("verse").classList.add("textfade");
-            document.getElementById("source").classList.add("textfade");
-            document.getElementById("verse").classList.remove("invisible");
-            document.getElementById("source").classList.remove("invisible");
-          }, 1250);
-        });
-      });
+    displayVerse(output, `${bookName} ${chapterString}:${verseString}`, {
+      gen,
+      translation,
     });
   } catch (error) {
-    // If some error happened (like no connection), try again in 15 seconds.
-    // If we already tried again, abort and do the default verse: Proverbs 3:5-6
+    if (!isVerseFetchCurrent(gen)) return;
+
     if (!triedAgain) {
       setTimeout(() => {
-        helloaoFetch(translation, translation2, true);
+        helloaoFetch(translation, translation2, true, gen);
       }, 15000);
     } else {
       console.error("Verse fetch failed, showing default verse. - ", error);
-      defaultVerse();
+      defaultVerse(gen, translation);
     }
   }
 }
