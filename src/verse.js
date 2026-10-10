@@ -1,6 +1,7 @@
 const axios = require("axios");
 import defaultVerse from "./verse-fetching/defaultVerse";
 import bollsFetch from "./verse-fetching/bollsFetch";
+import apiBibleFetch from "./verse-fetching/apiBibleFetch";
 import helloaoFetch from "./verse-fetching/helloaoFetch";
 import dataParser from "./verse-fetching/helperFunctions";
 import {
@@ -16,11 +17,15 @@ import {
  * - fra_sbl — French SBL
  * - GREEK — SBL Greek NT (grc_sbl1); Bolls has TISCH/TR/LXX instead
  *
+ * API.Bible (user API key required):
+ * - NIV2011 — NIV (no longer on Bolls; not on helloao; not on Biblia API)
+ *
  * Now on Bolls (migrated off helloao):
  * - eng_asv → ASV
  * - BSB → BSB
  */
 const HELLOAO_ONLY = new Set(["fra_sbl", "GREEK"]);
+const API_BIBLE_ONLY = new Set(["NIV2011"]);
 
 /** Map legacy / UI ids onto Bolls short_name values. */
 const BOLLS_IDS = {
@@ -31,30 +36,31 @@ function resolveBollsId(translation) {
   return BOLLS_IDS[translation] || translation;
 }
 
-export async function grabVerse(translation, translation2) {
+function dispatchTranslation(translation, translation2) {
   if (translation === "VOTD") {
     votd(translation);
+    return;
+  }
+
+  if (API_BIBLE_ONLY.has(translation)) {
+    apiBibleFetch(translation);
     return;
   }
 
   if (HELLOAO_ONLY.has(translation)) {
     helloaoFetch(translation, translation2);
-  } else {
-    bollsFetch(resolveBollsId(translation));
-  }
-}
-
-export async function grabVerseAgain(translation) {
-  if (translation === "VOTD") {
-    votd(translation);
     return;
   }
 
-  if (HELLOAO_ONLY.has(translation)) {
-    helloaoFetch(translation, translation);
-  } else {
-    bollsFetch(resolveBollsId(translation));
-  }
+  bollsFetch(resolveBollsId(translation));
+}
+
+export async function grabVerse(translation, translation2) {
+  dispatchTranslation(translation, translation2);
+}
+
+export async function grabVerseAgain(translation) {
+  dispatchTranslation(translation, translation);
 }
 
 async function votd(translation, triedAgain = false, gen = null) {

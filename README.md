@@ -6,7 +6,7 @@ Workshop: [Bible Verse of the Day](https://steamcommunity.com/sharedfiles/filede
 
 ## Features
 
-- Verse of the day via a scrape proxy, then text from [Bolls](https://bolls.life/) or [helloao](https://bible.helloao.org/) depending on the selected translation
+- Verse of the day via a scrape proxy, then text from [Bolls](https://bolls.life/), [helloao](https://bible.helloao.org/), or [API.Bible](https://www.api.bible/) (NIV, with a free user API key) depending on the selected translation
 - Many English translations plus Spanish, French, German, Portuguese, Chinese, Russian, Korean, Japanese, Dutch, Polish, Italian, Indonesian, and Greek options
 - Localization for the above languages
 - High customizability
@@ -49,6 +49,7 @@ Opens a local preview at `http://localhost:1331`. Wallpaper Engine property inje
 ## User properties (overview)
 
 - **Bible Version** / **Secondary** (for Greek NT OT fallback)
+- **API.Bible Key (NIV)** — shown when NIV is selected; create a free Starter app at [API.Bible](https://scripture.api.bible/signup) and add NIV
 - **24 Hour Time**, **Month Language**, **Date/Time Position**
 - **Background**, custom image/video, **Static Background**
 - **Verse Box** (ripple / no ripple / no box)

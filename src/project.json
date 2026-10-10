@@ -1,6 +1,6 @@
 {
 	"contentrating" : "Everyone",
-	"description" : "[h1]About[/h1]\nGets the verse of the day from a proxy of verseoftheday.com. Internet connection is required for the verse, otherwise you'll see the default verse.\n\n[i]Verse fetching may take up to a minute initially, as the proxy used \"hibernates\" after periods of no activity.[/i]\n\nThere are many versions to choose from, such as KJV, ESV, and NIV, plus some options in other languages.\n\nBy default, the background changes based on the day of the week and the time of day. Each day of the week's background is either a photo or an abstract vector image, but at night (18:00-06:00/6pm-6am) it will change to what you see on the preview.\n\nYou can also customize the background to your liking by importing images or videos in the user properties section.\n\nThe verse loading may take slightly more time depending on which version you use. This is due to the different APIs used for different versions.\n\n[h2]Source Code[/h2]\nhttps://github.com/PlugNChug/wallpaper-votd\n\n[h2]Updates[/h2]\n[h3]24 May 2025 - Customization update[/h3]\nLong overdue because of school, but it's out now!\n[list]\n[*]Added ability to import custom images and videos as the background\n[*]Added ability to toggle date/time\n[*]Added ability to toggle animations and swaying for the default backgrounds\n[*]Added ability to toggle the box ripple effect\n[*]Fixed single-chapter book verse fetching (verses from Obadiah, Philemon, 2/3 John, Jude in previous versions were bugged)\n[*]Removed unpaired ' and \" character removal, it seemed to have caused more problems than fix them...\n[*]Major code refactoring\n[/list]\n\n[h3]16 Jan. 2025 - Minor fixes[/h3]\n[list]\n[*]Some incorrect function calls\n[*]Interval stopping\n[/list]\n\n[h3]13 Jan. 2025 - Minor fix[/h3]\nNow should not go back to the fallback verse as often\n\n[h3]11 Jan. 2025 - Minor fix[/h3]\nFixed VOTD Format version not fetching properly\n\n[h3]6 Jan. 2025 - More options[/h3]\n[list]\n[*]Added what's shown on verseoftheday.com as a version option (it's NIV with modifications for context on some days)\n[*]Added a background chooser\n[*]Fixed some fetching errors\n[/list]\n\n[h3]27 Dec. 2024 - Fixes[/h3]\n[list]\n[*]Fixed the default verse not showing.\n[*]Fixed the Friday background.\n[/list]",
+	"description" : "[h1]About[/h1]\nGets the verse of the day from a proxy of verseoftheday.com. Internet connection is required for the verse, otherwise you'll see the default verse.\n\n[i]Verse fetching may take up to a minute initially, as the proxy used \"hibernates\" after periods of no activity.[/i]\n\nThere are many versions to choose from, such as KJV, ESV, and NIV, plus some options in other languages.\n\n[b]NIV note:[/b] NIV text comes from API.Bible and needs a free Starter-tier API key. Create an app at https://scripture.api.bible/signup, add NIV when choosing copyrighted Bibles, then paste the key in the API.Bible Key setting, which is shown when NIV is selected.\n\nBy default, the background changes based on the day of the week and the time of day. Each day of the week's background is either a photo or an abstract vector image, but at night (18:00-06:00/6pm-6am) it will change to what you see on the preview.\n\nYou can also customize the background to your liking by importing images or videos in the user properties section.\n\nThe verse loading may take slightly more time depending on which version you use. This is due to the different APIs used for different versions.\n\n[h2]Source Code[/h2]\nhttps://github.com/PlugNChug/wallpaper-votd\n\n[h2]Updates[/h2]\n[h3]24 May 2025 - Customization update[/h3]\nLong overdue because of school, but it's out now!\n[list]\n[*]Added ability to import custom images and videos as the background\n[*]Added ability to toggle date/time\n[*]Added ability to toggle animations and swaying for the default backgrounds\n[*]Added ability to toggle the box ripple effect\n[*]Fixed single-chapter book verse fetching (verses from Obadiah, Philemon, 2/3 John, Jude in previous versions were bugged)\n[*]Removed unpaired ' and \" character removal, it seemed to have caused more problems than fix them...\n[*]Major code refactoring\n[/list]\n\n[h3]16 Jan. 2025 - Minor fixes[/h3]\n[list]\n[*]Some incorrect function calls\n[*]Interval stopping\n[/list]\n\n[h3]13 Jan. 2025 - Minor fix[/h3]\nNow should not go back to the fallback verse as often\n\n[h3]11 Jan. 2025 - Minor fix[/h3]\nFixed VOTD Format version not fetching properly\n\n[h3]6 Jan. 2025 - More options[/h3]\n[list]\n[*]Added what's shown on verseoftheday.com as a version option (it's NIV with modifications for context on some days)\n[*]Added a background chooser\n[*]Fixed some fetching errors\n[/list]\n\n[h3]27 Dec. 2024 - Fixes[/h3]\n[list]\n[*]Fixed the default verse not showing.\n[*]Fixed the Friday background.\n[/list]",
 	"file" : "index.html",
 	"general" : 
 	{
@@ -9,7 +9,7 @@
 			"_24hourtime" : 
 			{
 				"index" : 3,
-				"order" : 102,
+				"order" : 103,
 				"text" : "ui_24hourtime",
 				"type" : "bool",
 				"value" : false
@@ -76,7 +76,7 @@
 						"value" : "el-GR"
 					}
 				],
-				"order" : 109,
+				"order" : 110,
 				"text" : "ui_monthlocale",
 				"type" : "combo",
 				"value" : "en-US"
@@ -123,7 +123,7 @@
 						"value" : "bottomright"
 					}
 				],
-				"order" : 103,
+				"order" : 104,
 				"text" : "ui_clockposition",
 				"type" : "combo",
 				"value" : "topright"
@@ -178,7 +178,7 @@
 						"value" : "gradient"
 					}
 				],
-				"order" : 104,
+				"order" : 105,
 				"text" : "ui_forcebackground",
 				"type" : "combo",
 				"value" : "none"
@@ -187,7 +187,7 @@
 			{
 				"condition" : "forcebackground.value == \"customimage\"",
 				"index" : 5,
-				"order" : 105,
+				"order" : 106,
 				"text" : "ui_customimage",
 				"type" : "file",
 				"fileType" : "image",
@@ -197,7 +197,7 @@
 			{
 				"condition" : "forcebackground.value == \"customvideo\"",
 				"index" : 6,
-				"order" : 106,
+				"order" : 107,
 				"text" : "ui_customvideo",
 				"type" : "file",
 				"fileType" : "video",
@@ -207,7 +207,7 @@
 			{
 				"condition" : "forcebackground.value != \"customimage\" && forcebackground.value != \"customvideo\"",
 				"index" : 7,
-				"order" : 107,
+				"order" : 108,
 				"text" : "ui_staticbg",
 				"type" : "bool",
 				"value" : false
@@ -230,7 +230,7 @@
 						"value" : "nobox"
 					}
 				],
-				"order" : 108,
+				"order" : 109,
 				"text" : "ui_versebox",
 				"type" : "combo",
 				"value" : "ripple"
@@ -362,6 +362,15 @@
 				"type" : "combo",
 				"value" : "KJV"
 			},
+			"apibiblekey" :
+			{
+				"condition" : "bibleversion.value == \"NIV2011\" || bibleversion2.value == \"NIV2011\"",
+				"index" : 10,
+				"order" : 101,
+				"text" : "ui_apibiblekey",
+				"type" : "textinput",
+				"value" : ""
+			},
 			"bibleversion2" : 
 			{
 				"condition" : "bibleversion.value == \"GREEK\"",
@@ -481,7 +490,7 @@
 						"value" : "LXX"
 					}
 				],
-				"order" : 101,
+				"order" : 102,
 				"text" : "ui_bibleversion2",
 				"type" : "combo",
 				"value" : "KJV"

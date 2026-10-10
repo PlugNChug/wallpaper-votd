@@ -11,6 +11,7 @@ import {
   loadSettingsCache,
   saveSettingsCache,
 } from "./verse-fetching/fetchUtils";
+import { setApiBibleKey } from "./verse-fetching/apiBibleAuth";
 import "./styles/main.scss";
 
 import NightSky from "./assets/NightSky.jpg";
@@ -53,6 +54,7 @@ let runtime = null;
 const DEFAULT_SETTINGS = {
   version: "ESV",
   version2: "VOTD",
+  apiBibleKey: "",
   twentyFourHour: false,
   clockPosition: "topright",
   monthLocale: "en-US",
@@ -86,6 +88,10 @@ function normalizeCachedSettings(cached) {
       cached.version2 === "eng_asv"
         ? "ASV"
         : (cached.version2 ?? DEFAULT_SETTINGS.version2),
+    apiBibleKey:
+      cached.apiBibleKey ??
+      cached.bibliaApiKey ??
+      DEFAULT_SETTINGS.apiBibleKey,
     twentyFourHour: cached.twentyFourHour ?? DEFAULT_SETTINGS.twentyFourHour,
     clockPosition,
     monthLocale: cached.monthLocale ?? DEFAULT_SETTINGS.monthLocale,
@@ -100,6 +106,7 @@ function normalizeCachedSettings(cached) {
 const cached = normalizeCachedSettings(loadSettingsCache());
 let version = cached?.version ?? DEFAULT_SETTINGS.version;
 let version2 = cached?.version2 ?? DEFAULT_SETTINGS.version2;
+let apiBibleKey = cached?.apiBibleKey ?? DEFAULT_SETTINGS.apiBibleKey;
 let twentyFourHour = cached?.twentyFourHour ?? DEFAULT_SETTINGS.twentyFourHour;
 let clockPosition = cached?.clockPosition ?? DEFAULT_SETTINGS.clockPosition;
 let monthLocale = cached?.monthLocale ?? DEFAULT_SETTINGS.monthLocale;
@@ -108,6 +115,7 @@ let forceBackgroundSetting =
 let customFile = cached?.customFile ?? DEFAULT_SETTINGS.customFile;
 let staticBg = cached?.staticBg ?? DEFAULT_SETTINGS.staticBg;
 let verseBox = cached?.verseBox ?? DEFAULT_SETTINGS.verseBox;
+setApiBibleKey(apiBibleKey);
 
 /**
  * Wallpaper Engine requires wallpaperPropertyListener on window immediately,
@@ -160,6 +168,14 @@ function handleUserProperties(props) {
 function applyPropsToState(props) {
   if (props.bibleversion) version = props.bibleversion.value;
   if (props.bibleversion2) version2 = props.bibleversion2.value;
+  if (props.apibiblekey) {
+    apiBibleKey = props.apibiblekey.value || "";
+    setApiBibleKey(apiBibleKey);
+  } else if (props.bibliaapikey) {
+    // Legacy property name from the short-lived Biblia.com attempt
+    apiBibleKey = props.bibliaapikey.value || "";
+    setApiBibleKey(apiBibleKey);
+  }
   // Legacy helloao ASV id → Bolls ASV
   if (version === "eng_asv") version = "ASV";
   if (version2 === "eng_asv") version2 = "ASV";
@@ -183,9 +199,11 @@ function applyPropsToState(props) {
 }
 
 function initScreen() {
+  setApiBibleKey(apiBibleKey);
   runtime = {
     version,
     version2,
+    apiBibleKey,
     twentyFourHour,
     clockPosition,
     monthLocale,

@@ -31,6 +31,22 @@
     "id-id": "Versi Alkitab sekunder",
     "el-gr": "Δευτερεύουσα μετάφραση"
   },
+  "ui_apibiblekey": {
+    "en-us": "API.Bible Key (NIV)",
+    "de-de": "API.Bible-Schlüssel (NIV)",
+    "es-es": "Clave API.Bible (NIV)",
+    "fr-fr": "Clé API.Bible (NIV)",
+    "pt-br": "Chave API.Bible (NIV)",
+    "zh-chs": "API.Bible 密钥（NIV）",
+    "ru-ru": "Ключ API.Bible (NIV)",
+    "ko-kr": "API.Bible 키 (NIV)",
+    "ja-jp": "API.Bibleキー（NIV）",
+    "nl-nl": "API.Bible-sleutel (NIV)",
+    "pl-pl": "Klucz API.Bible (NIV)",
+    "it-it": "Chiave API.Bible (NIV)",
+    "id-id": "Kunci API.Bible (NIV)",
+    "el-gr": "Κλειδί API.Bible (NIV)"
+  },
   "ui_monthlocale": {
     "en-us": "Month Language",
     "de-de": "Monatssprache",
